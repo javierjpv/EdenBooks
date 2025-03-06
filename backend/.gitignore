@@ -1,0 +1,23 @@
+# Binaries and compiled files
+*.exe
+*.out
+*.test
+bin/
+
+# Vendor folder (only if using Go modules)
+vendor/
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+
+# Environment files
+.env
+.env.local
+.env.*.local
