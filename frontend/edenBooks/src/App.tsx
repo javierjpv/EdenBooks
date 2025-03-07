@@ -13,6 +13,7 @@ import { NotificationPage } from "./modules/notifications/pages/NotificationPage
 import { OrderPage } from "./modules/orders/pages/OrderPage";
 import { ChatPage } from "./modules/chats/pages/ChatPage";
 import { ChatDetail } from "./modules/chats/components/ChatDetail";
+import { FavoritesPage } from "./modules/products/pages/FavoritesPage";
 
 
 export const App = () => {
@@ -38,7 +39,7 @@ export const App = () => {
         <Route path="/chats" element={<ChatPage />} />
         <Route path="/chats/:id" element={<ChatDetail />} />
 
-
+        <Route path="/favorites" element={<FavoritesPage />} />
       </Route>
     </Routes>
   );

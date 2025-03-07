@@ -89,6 +89,20 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
     }
   };
 
+  const handleFavorite = async () => {
+    if (product && product.ID) {
+      console.log("añadido a favoritos");
+      try {
+        await productService.AddToFavorite(product.ID);
+      } catch (error) {
+        console.log("error al añadir a favorito");
+      } finally {
+      }
+    } else {
+      console.log("no existe aun el product");
+    }
+  };
+
   return (
     <>
       {product == null ? (
@@ -157,6 +171,7 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
                       <Box>
                         {!product.Sold && (
                           <IconButton
+                            onClick={handleFavorite}
                             aria-label="add to favorites"
                           >
                             <Favorite />

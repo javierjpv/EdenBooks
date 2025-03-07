@@ -2,6 +2,7 @@ import { IProductApi } from "../interfaces/IProductApi";
 import { IProductDto } from "../interfaces/IProductDto";
 import { IProduct } from "../interfaces/IProduct";
 import axios from "axios";
+import { axiosInstance } from "../../../api/axiosInstance";
 
 const BASE_URL = "http://localhost:6969/products";
 
@@ -9,6 +10,10 @@ export const productApi: IProductApi = {
 
   GetProducts: async (): Promise<IProductDto[]> => {
     const response = await axios.get<IProductDto[]>(BASE_URL);
+    return response.data;
+  },
+  GetFavorites: async (): Promise<IProductDto[]> => {
+    const response = await axiosInstance.get<IProductDto[]>(`${BASE_URL}/favorites`);
     return response.data;
   },
   GetProductById: async (id: number): Promise<IProductDto> => {
@@ -24,5 +29,11 @@ export const productApi: IProductApi = {
   DeleteProduct: async (id: number): Promise<void> => {
     await axios.delete(`${BASE_URL}/${id}`);
   },
+  AddToFavorite: async (id: number): Promise<void> => {
+    await axiosInstance.post(`${BASE_URL}/${id}/favorite`);
+  },
+  DeleteFromFavorites: async (id: number): Promise<void> => {
+    await axiosInstance.delete(`${BASE_URL}/${id}/favorite`);
+  },  
 
 };

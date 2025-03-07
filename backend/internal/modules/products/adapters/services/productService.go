@@ -82,7 +82,26 @@ func(s * ProductService)DeleteProduct(id uint)error{
 func(s * ProductService)GetProductByID(id uint)(*entities.Product,error){
 	return s.repo.GetProductByID(id)
 }
+func(s * ProductService)AddToFavorites(userID uint, productID uint)error{
+	if _,err:= s.repo.GetProductByID(productID);err!=nil{
+		return err
+	}
+	return s.repo.AddToFavorites(userID,productID)
+}
+func(s * ProductService)RemoveFromFavorites(userID uint, productID uint) error{
+	if _,err:= s.repo.GetProductByID(productID);err!=nil{
+		return err
+	}
+ return s.repo.RemoveFromFavorites(userID,productID)
+}
+
+func (s *ProductService) GetFavorites(userID uint) ([]entities.Product, error){
+	return s.repo.GetFavorites(userID)
+}
 
 func (s *ProductService) GetFilteredProducts(filters map[string]string) ([]entities.Product, error) {
 	return s.repo.GetFilteredProducts(filters)
+}
+func (s *ProductService)GetProductsWithFavorites(userID uint, filters map[string]string) ([]entities.ProductWithFavoriteStatus, error){
+	return s.repo.GetProductsWithFavorites(userID,filters)
 }

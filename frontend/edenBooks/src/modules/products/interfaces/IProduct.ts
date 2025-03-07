@@ -8,4 +8,5 @@ export interface IProduct{
     ImageURL: string|null
     Sold?:boolean
     // order?
+    
 }

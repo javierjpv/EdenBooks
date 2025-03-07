@@ -60,7 +60,31 @@ func (u *ProductUseCase)GetProductByID(id uint)(*entities.Product,error){
 	}
 	return u.service.GetProductByID(id)
 }
+func (u *ProductUseCase)AddToFavorites(userID uint,productID uint)error{
+	if  userID==0  {
+		return ErrInvalid
+	}
+	if  userID==0  {
+		return ErrInvalid
+	}
+	return u.service.AddToFavorites(userID,productID)
+}
 
+func (u *ProductUseCase)RemoveFromFavorites(userID uint,productID uint)error{
+	if  userID==0  {
+		return ErrInvalid
+	}
+	if  userID==0  {
+		return ErrInvalid
+	}
+	return u.service.RemoveFromFavorites(userID,productID)
+}
+func (u *ProductUseCase)GetFavorites(userID uint) ([]entities.Product, error){
+	if  userID==0  {
+		return nil,ErrInvalid
+	}
+	return u.service.GetFavorites(userID)
+}
 func (u *ProductUseCase) GetFilteredProducts(filters map[string]string) ([]entities.Product, error) {
 	// Validar el orden si está presente
 	if order, exists := filters["order"]; exists {
@@ -78,4 +102,22 @@ func (u *ProductUseCase) GetFilteredProducts(filters map[string]string) ([]entit
 	}
 
 	return u.service.GetFilteredProducts(filters)
+}
+func (u *ProductUseCase) GetProductsWithFavorites(userID uint, filters map[string]string) ([]entities.ProductWithFavoriteStatus, error) {
+	// Validar el orden si está presente
+	if order, exists := filters["order"]; exists {
+		if order != "asc" && order != "desc" {
+			filters["order"] = "asc" // Valor por defecto
+		}
+	}
+
+	// Validar columna de orden si está presente
+	if sortBy, exists := filters["sort_by"]; exists {
+		validSortColumns := map[string]bool{"price": true, "name": true}
+		if !validSortColumns[sortBy] {
+			delete(filters, "sort_by") // Eliminar si no es válido
+		}
+	}
+
+	return u.service.GetProductsWithFavorites(userID,filters)
 }

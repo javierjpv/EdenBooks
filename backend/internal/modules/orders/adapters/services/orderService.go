@@ -5,6 +5,7 @@ import (
 	"log"
 	"github.com/javierjpv/edenBooks/internal/modules/addresses/application/dto"
 	// addressEntities "github.com/javierjpv/edenBooks/internal/modules/addresses/domain/entities"
+    // productDTO "github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
 	addressServices "github.com/javierjpv/edenBooks/internal/modules/addresses/domain/services"
 	carrierServices "github.com/javierjpv/edenBooks/internal/modules/carriers/domain/services"
 	orderDTO "github.com/javierjpv/edenBooks/internal/modules/orders/application/dto"
@@ -27,6 +28,41 @@ type OrderService struct {
 func NewOrderService(repo repositories.OrderRepository, productService productServices.ProductService, addressService addressServices.AddressService, carrierService carrierServices.CarrierService, userService userService.UserService, eventBusService eventBusService.EventBus) *OrderService {
 	return &OrderService{repo: repo, productService: productService, addressService: addressService, carrierService: carrierService, userService: userService, eventBusService: eventBusService}
 }
+
+// func(s * OrderService)AddOrderIDToProducts(orderID uint,productsIDs []uint)error{
+// 	for _, productID := range productsIDs {
+// 		product,err:=s.productService.GetProductByID(productID)
+// 		if err!=nil{
+// 			return fmt.Errorf("product does not exist")
+// 		}
+// 		if product.Sold {
+// 			return fmt.Errorf("product has already been sold")
+// 		}
+// 	}
+// 	for _, productsID := range productsIDs {
+// 		product,err:=s.productService.GetProductByID(productsID)
+// 		if err!=nil{
+// 			return fmt.Errorf("product does not exist")
+// 		}
+// 		product.OrderID=&orderID
+// 		product.Sold=true
+//         productDto:=productDTO.ProductDTO
+// 		if err:=s.productService.UpdateProduct(productsID);err!=nil{
+// 			return  fmt.Errorf("product orderID can not be updated")
+// 		}
+// 	}
+// 		// Publicar evento en el Bus
+// 		eventData := map[string]interface{}{
+// 			"content": fmt.Sprintf("Se ha creado un pedido con el id: %d",orderID),
+// 			"seen":false,
+// 			"userID":uint(1), //cambiar en el futuro para que sea dinamico
+// 		}
+// 		fmt.Println("📢 Publicando evento 'order.created' con datos:", eventData)
+// 		s.eventBusService.Publish("order.created", eventData)
+
+// 	return nil
+// }
+
 
 func (s *OrderService) CheckOrder(o orderDTO.OrderDTO, productsIDs []uint) (error) {
 

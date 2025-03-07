@@ -54,6 +54,7 @@ export function Navbar() {
           { name: "Notificaciones", link: "/notifications" },
           { name: "Pedidos", link: "/orders" },
           { name: "Chats", link: "/chats" },
+          { name: "Wishlist", link: "/favorites" },
         ]
       : [{ name: "Auth", link: "/auth" }];
 
