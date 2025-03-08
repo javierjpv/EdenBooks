@@ -1,4 +1,4 @@
-import { IMessage } from "../../messages/interfaces/IMessage";
+import { IMessageDto } from "../../messages/interfaces/IMessageDto";
 import { IUser } from "../../users/interfaces/IUser"
 
 export interface IChatDto{
@@ -7,5 +7,5 @@ export interface IChatDto{
     UpdatedAt: string;
     DeletedAt: string | null;
     Users:IUser[] 
-    Messages:null|IMessage[]
+    Messages:null|IMessageDto[]
 }
