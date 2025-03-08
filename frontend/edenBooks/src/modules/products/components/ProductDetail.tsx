@@ -35,7 +35,7 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
   const { user } = useAuthStore();
   const [loadingDelete, setloadingDelete] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
-  const [isFavorite, setIsFavorite] = useState<boolean>(product ? product.isFavorite : false);
+  const [isFavorite, setIsFavorite] = useState(product ? product.isFavorite : false);
   const navigate = useNavigate();
   const handleDelete = async (id: number): Promise<void> => {
     try {
