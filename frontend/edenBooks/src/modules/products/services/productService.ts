@@ -1,5 +1,6 @@
 import { productApi } from "../api/productApi";
 import { IProduct } from "../interfaces/IProduct";
+import { IProductRequest } from "../interfaces/IProductResquest";
 import { IProductService } from "../interfaces/IProductService";
 import { FromDto } from "../mappers/productMapper";
 
@@ -38,7 +39,7 @@ export const productService: IProductService = {
       throw new Error("Error al obtener un producto");
     }
   },
-  CreateProduct: async (product: IProduct): Promise<void> => {
+  CreateProduct: async (product: IProductRequest): Promise<void> => {
     try {
       await productApi.CreateProduct(product);
     } catch (error: any) {
@@ -50,7 +51,7 @@ export const productService: IProductService = {
       throw new Error("Error al crear un producto");
     }
   },
-  UpdateProduct: async (id: number, product: IProduct): Promise<void> => {
+  UpdateProduct: async (id: number, product: IProductRequest): Promise<void> => {
     try {
       await productApi.UpdateProduct(id, product);
     } catch (error) {

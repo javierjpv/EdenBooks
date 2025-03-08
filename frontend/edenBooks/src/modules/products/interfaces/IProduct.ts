@@ -1,5 +1,5 @@
 export interface IProduct{
-    ID?:number
+    ID:number
     Name: string
     Description: string
     Price: number
@@ -7,7 +7,5 @@ export interface IProduct{
     UserID: number
     ImageURL: string|null
     Sold?:boolean
-    // order?
     isFavorite?: boolean
-    
 }

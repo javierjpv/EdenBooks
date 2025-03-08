@@ -1,8 +1,8 @@
 import { IProductApi } from "../interfaces/IProductApi";
 import { IProductDto } from "../interfaces/IProductDto";
-import { IProduct } from "../interfaces/IProduct";
 import axios from "axios";
 import { axiosInstance } from "../../../api/axiosInstance";
+import { IProductRequest } from "../interfaces/IProductResquest";
 
 const BASE_URL = "http://localhost:6969/products";
 
@@ -20,10 +20,10 @@ export const productApi: IProductApi = {
     const response = await axiosInstance.get<IProductDto>(`${BASE_URL}/${id}`);
     return response.data;
   },
-  CreateProduct: async (product: IProduct): Promise<void> => {
+  CreateProduct: async (product: IProductRequest): Promise<void> => {
     await axios.post(BASE_URL, product);
   },
-  UpdateProduct: async (id: number, product: IProduct): Promise<void> => {
+  UpdateProduct: async (id: number, product: IProductRequest): Promise<void> => {
     await axios.put(`${BASE_URL}/${id}`, product);
   },
   DeleteProduct: async (id: number): Promise<void> => {

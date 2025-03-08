@@ -12,7 +12,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { categoryService } from "../../categories/services/categoryService";
 import { IProduct } from "../interfaces/IProduct";
@@ -22,8 +21,9 @@ import { useNavigate } from "react-router";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
 import axios from "axios";
+import { IProductRequest } from "../interfaces/IProductResquest";
 
-const checkProduct = (product: IProduct): boolean => {
+const checkProduct = (product: IProductRequest): boolean => {
   if (
     product.Name.trim() === "" ||
     product.Description.trim() === "" ||
@@ -36,14 +36,15 @@ const checkProduct = (product: IProduct): boolean => {
   return true;
 };
 
-export const ProductForm = ({ id }: { id?: number}) => {
+export const ProductForm = ({ id }: { id?: number }) => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(false); //Este loading es del submit
+  //crear otro loading para rescuperar el producto en modo edicion
   const [error, seterror] = useState(false);
   const [success, setsuccess] = useState(false);
   const [categories, setcategories] = useState<ICategory[]>([]);
-  const [product, setproduct] = useState<IProduct>({
+  const [product, setproduct] = useState<IProductRequest>({
     Name: "",
     Description: "",
     Price: 0,
@@ -124,7 +125,7 @@ export const ProductForm = ({ id }: { id?: number}) => {
 
     const fileInput = document.getElementById("ImageURL") as HTMLInputElement;
     const file = fileInput?.files?.[0];
-    
+
     setloading(true);
     if (file) {
       try {
@@ -138,7 +139,6 @@ export const ProductForm = ({ id }: { id?: number}) => {
       }
     }
     try {
-      
       console.log("CONSOLE", productToSubmit);
       if (id === undefined) {
         await productService.CreateProduct(productToSubmit);
@@ -180,19 +180,26 @@ export const ProductForm = ({ id }: { id?: number}) => {
   const fetchProduct = async (id: number): Promise<void> => {
     try {
       const fetchedProduct: IProduct = await productService.GetProductById(id);
-      setproduct({ ...fetchedProduct, UserID: Number(user?.ID) || 0 });
+      setproduct({
+        CategoryID: fetchedProduct.CategoryID,
+        Description: fetchedProduct.Description,
+        Name: fetchedProduct.Name,
+        ImageURL: fetchedProduct.ImageURL,
+        Price: fetchedProduct.Price,
+        UserID: Number(user?.ID) || 0,
+      });
     } catch (error) {
       console.log("Error al obtener el producto para ser editado", error);
     }
   };
   useEffect(() => {
-    if (id !== undefined) {
+    if (id) {
       fetchProduct(id);
     }
   }, [id]);
   // // //este useEffect solo sera de pruebas
   useEffect(() => {
-    console.log("estado actual de product", product);
+    console.log("estado actual de productRequest", product);
   }, [product]);
 
   return (
@@ -242,6 +249,10 @@ export const ProductForm = ({ id }: { id?: number}) => {
                 id="Price"
                 name="Price"
                 type="number"
+                inputProps={{ min: 0 }}
+                slotProps={{
+                  
+                }}
                 value={product.Price}
                 onChange={handleInputChange}
               />
