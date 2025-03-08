@@ -1,4 +1,4 @@
- import { IOrderDto } from "../../orders/interfaces/IOrderDto"
+ import { IOrderResponse } from "../../orders/interfaces/IOrderDto"
 
 export interface ICarrierDto {
     ID:number
@@ -8,5 +8,5 @@ export interface ICarrierDto {
 
     Name:string 
     Contact:string
-    Orders:null|IOrderDto[]
+    Orders:null|IOrderResponse[]
   }

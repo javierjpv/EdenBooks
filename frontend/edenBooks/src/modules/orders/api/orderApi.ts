@@ -3,7 +3,7 @@ import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IOrderApi } from "../interfaces/IOrderApi";
 import { IOrder } from "../interfaces/IOrder";
 import { OrderFromDto} from "../mappers/orderMapper";
-import { IOrderDto } from "../interfaces/IOrderDto";
+import { IOrderResponse } from "../interfaces/IOrderDto";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { IOrderRequest } from "../interfaces/IOrderRequest";
 
@@ -27,7 +27,7 @@ export const orderApi: IOrderApi = {
   GetOrders: async (): Promise<ApiResponse<IOrder[]>> => {
 
     try {
-      const response = await axiosInstance.get<IOrderDto[]>(BASE_URL);
+      const response = await axiosInstance.get<IOrderResponse[]>(BASE_URL);
       const ordersDto = response.data;
       const orders: IOrder[] = ordersDto.map((orderDto) =>
         OrderFromDto(orderDto)
@@ -41,7 +41,7 @@ export const orderApi: IOrderApi = {
   },
   GetOrderById: async (id): Promise<ApiResponse<IOrder>> => {
     try {
-      const response = await axiosInstance.get<IOrderDto>(`${BASE_URL}/${id}`);
+      const response = await axiosInstance.get<IOrderResponse>(`${BASE_URL}/${id}`);
       const orderDto = response.data;
 
       const order: IOrder = OrderFromDto(orderDto);

@@ -1,4 +1,4 @@
-export interface IOrderDto{
+export interface IOrderResponse{
     ID: number
     CreatedAt: string
     UpdatedAt: string
