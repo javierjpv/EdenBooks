@@ -9,48 +9,48 @@ import (
 )
 
 var (
-    ErrMissingFields = fmt.Errorf("all fields are required")
-    ErrInvalid     = fmt.Errorf("invalid ID")
+	ErrMissingFields = fmt.Errorf("all fields are required")
+	ErrInvalid       = fmt.Errorf("invalid ID")
 )
+
 type NotificationUseCase struct {
-	service services.NotificationService	
+	service services.NotificationService
 }
 
-
-func NewNotificationUseCase(service services.NotificationService)*NotificationUseCase{
+func NewNotificationUseCase(service services.NotificationService) *NotificationUseCase {
 	return &NotificationUseCase{service: service}
 }
 
-func (u *NotificationUseCase)CreateNotification(n dto.NotificationDTO)error{
-	if n.Content == ""{
+func (u *NotificationUseCase) CreateNotification(n dto.NotificationRequest) error {
+	if n.Content == "" {
 		return ErrMissingFields
 	}
-	if  n.UserID==0 {
+	if n.UserID == 0 {
 		return ErrInvalid
 	}
 	return u.service.CreateNotification(n)
 }
 
-func (u *NotificationUseCase)UpdateNotification(id uint,n dto.NotificationDTO)error{
-	if n.Content == ""{
+func (u *NotificationUseCase) UpdateNotification(id uint, n dto.NotificationRequest) error {
+	if n.Content == "" {
 		return ErrMissingFields
 	}
-	if  n.UserID==0 || id==0{
+	if n.UserID == 0 || id == 0 {
 		return ErrInvalid
 	}
-	return u.service.UpdateNotification(id,n)
+	return u.service.UpdateNotification(id, n)
 }
 
-func (u *NotificationUseCase)DeleteNotification(id uint)error{
-	if  id==0  {
+func (u *NotificationUseCase) DeleteNotification(id uint) error {
+	if id == 0 {
 		return ErrInvalid
 	}
 	return u.service.DeleteNotification(id)
 }
 
-func (u *NotificationUseCase)GetNotificationByID(id uint)(*entities.Notification,error){
-	if  id==0  {
-		return nil,ErrInvalid
+func (u *NotificationUseCase) GetNotificationByID(id uint) (*entities.Notification, error) {
+	if id == 0 {
+		return nil, ErrInvalid
 	}
 	return u.service.GetNotificationByID(id)
 }
