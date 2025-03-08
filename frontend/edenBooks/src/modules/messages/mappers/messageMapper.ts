@@ -5,12 +5,12 @@ export const MessageFromDto=(messageDto:IMessageDto):IMessage=>{
 
     const message:IMessage={
         ID:messageDto.ID,
-        content:messageDto.Content,
-        status:messageDto.Status,
-        seen:messageDto.Seen,
-        receiverID:messageDto.ReceiverID,
-        senderID:messageDto.SenderID,
-        chatID:messageDto.ChatID,
+        Content:messageDto.Content,
+        Status:messageDto.Status,
+        Seen:messageDto.Seen,
+        ReceiverID:messageDto.ReceiverID,
+        SenderID:messageDto.SenderID,
+        ChatID:messageDto.ChatID,
     }
     return message
 }

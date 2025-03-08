@@ -12,16 +12,16 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { chatService } from "../services/chatService";
 import { useEffect, useRef, useState } from "react";
-import { IChatDto } from "../interfaces/IChatDto";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
 import { ArrowBackIosNew, Send } from "@mui/icons-material";
 import { IMessageDto } from "../../messages/interfaces/IMessageDto";
 import { IMessageRequest } from "../../messages/interfaces/IMessageRequest";
+import { IChat } from "../interfaces/IChat";
 
 export const ChatDetail = () => {
   const { id } = useParams();
   const [loading, setloading] = useState<boolean>(true);
-  const [chat, setchat] = useState<IChatDto | null>(null);
+  const [chat, setchat] = useState<IChat | null>(null);
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const [newMessage, setNewMessage] = useState<string>("");

@@ -6,3 +6,4 @@ export interface IMessageRequest{
 	SenderID:number  
     ReceiverID:number
 }
+

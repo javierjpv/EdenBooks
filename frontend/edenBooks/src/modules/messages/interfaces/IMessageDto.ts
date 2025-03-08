@@ -10,5 +10,3 @@ export interface IMessageDto{
 	SenderID:number  
     ReceiverID:number
 }
-
-
