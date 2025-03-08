@@ -1,4 +1,4 @@
-export interface ICategoryDto{
+export interface ICategoryResponse{
     ID: number
     CreatedAt:string
     UpdatedAt:string

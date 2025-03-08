@@ -1,7 +1,7 @@
 import { List, ListItem } from "@mui/material"
 import { ICategory } from "../interfaces/ICategory"
-import { ICategoryDto } from "../interfaces/ICategoryDto"
-export const CategoryList = ({categories}:{categories:ICategory[]|ICategoryDto[]}) => {
+import { ICategoryResponse } from "../interfaces/ICategoryResponse"
+export const CategoryList = ({categories}:{categories:ICategory[]|ICategoryResponse[]}) => {
   return (
     <>
     <h2>CategoryList</h2>

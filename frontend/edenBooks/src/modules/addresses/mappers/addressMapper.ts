@@ -1,7 +1,7 @@
 import { IAddress } from "../interfaces/IAddress";
-import { IAddressDto } from "../interfaces/IAdressDto";
+import { IAddressResponse } from "../interfaces/IAdressResponse";
 
-export const fromDto=(addressDto:IAddressDto):IAddress=>{
+export const fromDto=(addressDto:IAddressResponse):IAddress=>{
 return{
     ID:addressDto.ID,
     country:addressDto.Country,

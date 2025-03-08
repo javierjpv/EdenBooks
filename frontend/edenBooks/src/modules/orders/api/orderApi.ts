@@ -3,7 +3,7 @@ import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IOrderApi } from "../interfaces/IOrderApi";
 import { IOrder } from "../interfaces/IOrder";
 import { OrderFromDto} from "../mappers/orderMapper";
-import { IOrderResponse } from "../interfaces/IOrderDto";
+import { IOrderResponse } from "../interfaces/IOrderResponse";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { IOrderRequest } from "../interfaces/IOrderRequest";
 

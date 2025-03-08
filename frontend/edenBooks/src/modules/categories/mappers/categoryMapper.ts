@@ -1,6 +1,6 @@
-import { ICategoryDto } from "../interfaces/ICategoryDto";
+import { ICategoryResponse } from "../interfaces/ICategoryResponse";
 import { ICategory } from "../interfaces/ICategory";
-export const FromCategoryDto = (categoryDto: ICategoryDto):ICategory => {
+export const FromCategoryDto = (categoryDto: ICategoryResponse):ICategory => {
   let category: ICategory;
   category = {
     ID:categoryDto.ID,

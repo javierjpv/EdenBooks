@@ -1,5 +1,5 @@
 import { IProductApi } from "../interfaces/IProductApi";
-import { IProductResponse } from "../interfaces/IProductDto";
+import { IProductResponse } from "../interfaces/IProductResponse";
 import axios from "axios";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { IProductRequest } from "../interfaces/IProductResquest";

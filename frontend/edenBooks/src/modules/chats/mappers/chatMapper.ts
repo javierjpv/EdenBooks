@@ -1,9 +1,9 @@
 import { IMessage } from "../../messages/interfaces/IMessage";
 import { MessageFromDto } from "../../messages/mappers/messageMapper";
 import { IChat } from "../interfaces/IChat";
-import { IChatDto } from "../interfaces/IChatDto";
+import { IChatResponse } from "../interfaces/IChatResponse";
 
-export const ChatFromDto=(chatDto:IChatDto):IChat=>{
+export const ChatFromDto=(chatDto:IChatResponse):IChat=>{
     const messages: IMessage[] = chatDto.Messages
     ? chatDto.Messages.map((messageDto) => MessageFromDto(messageDto))
     : []; //

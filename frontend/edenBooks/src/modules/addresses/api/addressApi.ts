@@ -3,7 +3,7 @@ import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IAddressApi } from "../interfaces/IAddressApi";
 import { IAddress } from "../interfaces/IAddress";
 import { fromDto } from "../mappers/addressMapper";
-import { IAddressDto } from "../interfaces/IAdressDto";
+import { IAddressResponse } from "../interfaces/IAdressResponse";
 import { IAddressRequest } from "../interfaces/IAddressRequest";
 
 const BASE_URL = "http://localhost:6969/addresses";
@@ -23,7 +23,7 @@ export const addressApi: IAddressApi = {
   },
   GetAddresss: async (): Promise<ApiResponse<IAddress[]>> => {
     try {
-      const response = await axios.get<IAddressDto[]>(BASE_URL);
+      const response = await axios.get<IAddressResponse[]>(BASE_URL);
       const addresssDto = response.data;
       const addresss: IAddress[] = addresssDto.map((addressDto) =>
         fromDto(addressDto)
@@ -37,7 +37,7 @@ export const addressApi: IAddressApi = {
   },
   GetAddressById: async (id): Promise<ApiResponse<IAddress>> => {
     try {
-      const response = await axios.get<IAddressDto>(`${BASE_URL}/${id}`);
+      const response = await axios.get<IAddressResponse>(`${BASE_URL}/${id}`);
       const addressDto = response.data;
 
       const address: IAddress = fromDto(addressDto);

@@ -3,7 +3,7 @@ import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IMessageApi } from "../interfaces/IMessageApi";
 import { IMessage } from "../interfaces/IMessage";
 import { MessageFromDto} from "../mappers/messageMapper";
-import { IMessageDto } from "../interfaces/IMessageDto";
+import { IMessageResponse } from "../interfaces/IMessageResponse";
 import { IMessageRequest } from "../interfaces/IMessageRequest";
 
 const BASE_URL = "http://localhost:6969/messages";
@@ -23,7 +23,7 @@ export const messageApi: IMessageApi = {
   },
   GetMessages: async (): Promise<ApiResponse<IMessage[]>> => {
     try {
-      const response = await axios.get<IMessageDto[]>(BASE_URL);
+      const response = await axios.get<IMessageResponse[]>(BASE_URL);
       const messagesDto = response.data;
       const messages: IMessage[] = messagesDto.map((messageDto) =>
         MessageFromDto(messageDto)
@@ -37,7 +37,7 @@ export const messageApi: IMessageApi = {
   },
   GetMessageById: async (id): Promise<ApiResponse<IMessage>> => {
     try {
-      const response = await axios.get<IMessageDto>(`${BASE_URL}/${id}`);
+      const response = await axios.get<IMessageResponse>(`${BASE_URL}/${id}`);
       const messageDto = response.data;
 
       const message: IMessage = MessageFromDto(messageDto);

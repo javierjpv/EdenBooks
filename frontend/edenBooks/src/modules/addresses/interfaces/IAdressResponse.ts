@@ -1,4 +1,4 @@
-export interface IAddressDto {
+export interface IAddressResponse {
     ID:number
     CreatedAt:string
     UpdatedAt: string

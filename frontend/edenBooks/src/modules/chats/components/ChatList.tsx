@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { chatService } from "../services/chatService"
-import { IChatDto } from "../interfaces/IChatDto"
+import { IChatResponse } from "../interfaces/IChatResponse"
 import { ChatItem } from "./ChatItem"
 import { Box, List, Skeleton, Typography } from "@mui/material"
 
 export const ChatList = () => {
     const [loading, setloading] = useState<boolean>(true)
-    const [chats, setchats] = useState<IChatDto[]>([])
+    const [chats, setchats] = useState<IChatResponse[]>([])
     // const [error, seterror] = useState<boolean>(false)
 const fetchChats=async():Promise<void>=>{
     setloading(true)

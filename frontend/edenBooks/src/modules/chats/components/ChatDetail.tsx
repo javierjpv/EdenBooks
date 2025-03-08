@@ -14,7 +14,7 @@ import { chatService } from "../services/chatService";
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
 import { ArrowBackIosNew, Send } from "@mui/icons-material";
-import { IMessageDto } from "../../messages/interfaces/IMessageDto";
+import { IMessageResponse } from "../../messages/interfaces/IMessageResponse";
 import { IMessageRequest } from "../../messages/interfaces/IMessageRequest";
 import { IChat } from "../interfaces/IChat";
 
@@ -83,7 +83,7 @@ export const ChatDetail = () => {
 
     socket.current.onmessage = (event) => {
       console.log("Mensaje recibido:", event.data);
-      const receivedMessage: IMessageDto = JSON.parse(event.data);
+      const receivedMessage: IMessageResponse = JSON.parse(event.data);
 
       // Verificar que el senderID o el receiverID INCLUYA A AMBOS USUARIOS,
       //  EL LOGEADO Y EL OTRO MIEMBRO DEL CHAT

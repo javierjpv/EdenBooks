@@ -1,4 +1,4 @@
-import { IProductResponse } from "./IProductDto";
+import { IProductResponse } from "./IProductResponse";
 import { IProductRequest } from "./IProductResquest";
 
 export interface IProductApi {

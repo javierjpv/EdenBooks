@@ -1,7 +1,7 @@
 import { IMessage } from "../interfaces/IMessage";
-import { IMessageDto } from "../interfaces/IMessageDto";
+import { IMessageResponse } from "../interfaces/IMessageResponse";
 
-export const MessageFromDto=(messageDto:IMessageDto):IMessage=>{
+export const MessageFromDto=(messageDto:IMessageResponse):IMessage=>{
 
     const message:IMessage={
         ID:messageDto.ID,

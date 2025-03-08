@@ -6,12 +6,12 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { IChatDto } from "../interfaces/IChatDto";
+import { IChatResponse } from "../interfaces/IChatResponse";
 import { Link } from "react-router";
 import { AccountCircle } from "@mui/icons-material";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
 
-export const ChatItem = ({ chat }: { chat: IChatDto }) => {
+export const ChatItem = ({ chat }: { chat: IChatResponse }) => {
   const { user } = useAuthStore();
 
   return (

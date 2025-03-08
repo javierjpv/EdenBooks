@@ -1,4 +1,4 @@
-export interface IMessageDto{
+export interface IMessageResponse{
     ID: number;
     CreatedAt: string;
     UpdatedAt: string;

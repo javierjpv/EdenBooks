@@ -1,6 +1,6 @@
- import { IOrderResponse } from "../../orders/interfaces/IOrderDto"
+ import { IOrderResponse } from "../../orders/interfaces/IOrderResponse"
 
-export interface ICarrierDto {
+export interface ICarrierResponse {
     ID:number
     CreatedAt:string
     UpdatedAt: string

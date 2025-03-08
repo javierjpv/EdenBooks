@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IReviewApi } from "../interfaces/IReviewApi";
-import { IReviewResponse } from "../interfaces/IReviewDto";
+import { IReviewResponse } from "../interfaces/IReviewResponse";
 import { IReview } from "../interfaces/IReview";
 import { fromDto } from "../mappers/reviewMapper";
 

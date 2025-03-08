@@ -1,4 +1,4 @@
-import { IProductResponse } from "../interfaces/IProductDto";
+import { IProductResponse } from "../interfaces/IProductResponse";
 import { IProduct } from "../interfaces/IProduct";
 
 export const FromDto = (productDto: IProductResponse):IProduct=> {

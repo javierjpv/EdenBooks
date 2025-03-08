@@ -1,7 +1,7 @@
 import { ICarrier } from "../interfaces/ICarrier";
-import { ICarrierDto } from "../interfaces/ICarrierDto";
+import { ICarrierResponse } from "../interfaces/ICarrierResponse";
 
-export const CarrierFromDto=(carrierDto:ICarrierDto):ICarrier=>{
+export const CarrierFromDto=(carrierDto:ICarrierResponse):ICarrier=>{
 return{
     ID:carrierDto.ID,
     contact:carrierDto.Contact,

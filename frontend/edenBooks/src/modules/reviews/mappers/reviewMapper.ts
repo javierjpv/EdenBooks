@@ -1,5 +1,5 @@
 import { IReview } from "../interfaces/IReview";
-import { IReviewResponse } from "../interfaces/IReviewDto";
+import { IReviewResponse } from "../interfaces/IReviewResponse";
 
 export const fromDto = (reviewDto: IReviewResponse): IReview => {
   const review: IReview = {

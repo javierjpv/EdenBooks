@@ -1,5 +1,5 @@
 import { IOrder } from "../interfaces/IOrder";
-import { IOrderResponse } from "../interfaces/IOrderDto";
+import { IOrderResponse } from "../interfaces/IOrderResponse";
 
 export const OrderFromDto=(orderDto:IOrderResponse):IOrder=>{
 const order:IOrder={
