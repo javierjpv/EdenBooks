@@ -1,5 +1,4 @@
-export interface IOrder{
-    ID: number
+export interface IOrderRequest{
     state: string
     userID: number
     addressID:number 

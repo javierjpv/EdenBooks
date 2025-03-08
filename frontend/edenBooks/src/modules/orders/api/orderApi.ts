@@ -5,13 +5,14 @@ import { IOrder } from "../interfaces/IOrder";
 import { OrderFromDto} from "../mappers/orderMapper";
 import { IOrderDto } from "../interfaces/IOrderDto";
 import { axiosInstance } from "../../../api/axiosInstance";
+import { IOrderRequest } from "../interfaces/IOrderRequest";
 
 
 const BASE_URL = "/orders";
 
 
 export const orderApi: IOrderApi = {
-  CreateOrder: async ( order: IOrder): Promise<ApiResponse<IOrder>> => {
+  CreateOrder: async ( order: IOrderRequest): Promise<ApiResponse<IOrder>> => {
     try {
       const response= await axiosInstance.post(BASE_URL, order);
       const orderDto = response.data;
@@ -51,7 +52,7 @@ export const orderApi: IOrderApi = {
       return { success: false, error: axiosError.request?.response };
     }
   },
-  UpdateOrder: async (id, order: IOrder): Promise<ApiResponse<IOrder>> => {
+  UpdateOrder: async (id, order: IOrderRequest): Promise<ApiResponse<IOrder>> => {
     try {
       await axiosInstance.put(`${BASE_URL}/${id}`, order);
       return { success: true };
