@@ -12,7 +12,7 @@ export const FromDto = (productDto: IProductDto):IProduct=> {
     UserID: productDto.UserID,
     ImageURL: productDto.ImageURL,
     Sold:productDto.Sold,
-    is_favorite: productDto.is_favorite
+    isFavorite: productDto.is_favorite
   }
   return product
 };

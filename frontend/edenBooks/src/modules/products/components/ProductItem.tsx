@@ -1,5 +1,6 @@
 import { IProduct } from "../interfaces/IProduct";
 import {
+  Alert,
   Avatar,
   Card,
   CardActions,
@@ -8,6 +9,7 @@ import {
   CardMedia,
   CircularProgress,
   IconButton,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import { Delete, Edit, Favorite, MoreVert } from "@mui/icons-material";
@@ -18,8 +20,9 @@ import { useAuthStore } from "../../users/hooks/useAuthStore";
 
 export const ProductItem = ({ product }: { product: IProduct }) => {
   const { user } = useAuthStore();
-  const [loadingDelete, setloadingDelete] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(product.is_favorite);
+  const [loadingDelete, setloadingDelete] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(product.isFavorite);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleEdit = (): void => {
@@ -55,6 +58,7 @@ export const ProductItem = ({ product }: { product: IProduct }) => {
       } else {
         await productService.AddToFavorite(product.ID);
         setIsFavorite(true);
+        setOpenSnackbar(true);
       }
     } catch (error) {
       console.log("Error al actualizar favorito", error);
@@ -62,7 +66,8 @@ export const ProductItem = ({ product }: { product: IProduct }) => {
   };
 
   return (
-    <Card>
+  <>
+   <Card>
       <Link
         to={`/products/${product.ID}`}
         style={{ textDecoration: "none", color: "inherit" }}
@@ -154,5 +159,17 @@ export const ProductItem = ({ product }: { product: IProduct }) => {
           )}
       </CardActions>
     </Card>
+          {/* Notificación Snackbar */}
+          <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity="info">
+          ¡Producto añadido a favoritos!
+        </Alert>
+      </Snackbar>
+  </>
   );
 };

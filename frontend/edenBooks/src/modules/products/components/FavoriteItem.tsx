@@ -54,8 +54,8 @@ export const FavoriteItem = ({ product }: { product: IProduct }) => {
             Precio: {product.Price} €
           </Typography>
 
-          {user?.userState === "AUTHENTICATED" &&
-            Number(user?.ID) !== product.UserID && (
+          {user.userState === "AUTHENTICATED" &&
+            Number(user.ID) !== product.UserID && (
               <>
                 {product.Sold ? (
                   <Typography variant="body1" gutterBottom color="error">

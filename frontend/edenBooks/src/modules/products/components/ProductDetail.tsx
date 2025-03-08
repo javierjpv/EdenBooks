@@ -1,6 +1,6 @@
 import { IProduct } from "../interfaces/IProduct";
 import {
-  // Avatar,
+  Alert,
   Box,
   Button,
   Card,
@@ -12,6 +12,7 @@ import {
   Container,
   IconButton,
   Skeleton,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import {
@@ -32,8 +33,9 @@ import { chatService } from "../../chats/services/chatService";
 
 export const ProductDetail = ({ product }: { product: IProduct | null }) => {
   const { user } = useAuthStore();
-  const [loadingDelete, setloadingDelete] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(product?.is_favorite ?? false);
+  const [loadingDelete, setloadingDelete] = useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(product ? product.isFavorite : false);
   const navigate = useNavigate();
   const handleDelete = async (id: number): Promise<void> => {
     try {
@@ -93,7 +95,6 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
     }
   };
 
-
   const handleFavorite = async () => {
     if (!product || !product.ID) {
       console.log("El producto no existe");
@@ -106,6 +107,7 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
       } else {
         await productService.AddToFavorite(product.ID);
         setIsFavorite(true);
+        setOpenSnackbar(true);
       }
     } catch (error) {
       console.log("Error al actualizar favorito", error);
@@ -180,13 +182,13 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
                       <Box>
                         {!product.Sold && (
                           <>
-                              <IconButton
-                                color={isFavorite?"error":"default"}
-                                onClick={handleFavorite}
-                                aria-label="add to favorites"
-                              >
-                                <Favorite />
-                              </IconButton>
+                            <IconButton
+                              color={isFavorite ? "error" : "default"}
+                              onClick={handleFavorite}
+                              aria-label="add to favorites"
+                            >
+                              <Favorite />
+                            </IconButton>
                           </>
                         )}
                         <Button
@@ -292,6 +294,17 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
                 )}
             </CardActions>
           </Card>
+          {/* Notificación Snackbar */}
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
+            onClose={() => setOpenSnackbar(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <Alert onClose={() => setOpenSnackbar(false)} severity="info">
+              ¡Producto añadido a favoritos!
+            </Alert>
+          </Snackbar>
         </Container>
       )}
     </>
