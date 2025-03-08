@@ -4,11 +4,12 @@ import { IAddressApi } from "../interfaces/IAddressApi";
 import { IAddress } from "../interfaces/IAddress";
 import { fromDto } from "../mappers/addressMapper";
 import { IAddressDto } from "../interfaces/IAdressDto";
+import { IAddressRequest } from "../interfaces/IAddressRequest";
 
 const BASE_URL = "http://localhost:6969/addresses";
 
 export const addressApi: IAddressApi = {
-  CreateAddress: async ( address: IAddress): Promise<ApiResponse<IAddress>> => {
+  CreateAddress: async ( address: IAddressRequest): Promise<ApiResponse<IAddress>> => {
     try {
       const response= await axios.post(BASE_URL, address);
       const addressDto = response.data;
@@ -47,7 +48,7 @@ export const addressApi: IAddressApi = {
       return { success: false, error: axiosError.request?.response };
     }
   },
-  UpdateAddress: async (id, address: IAddress): Promise<ApiResponse<IAddress>> => {
+  UpdateAddress: async (id, address: IAddressRequest): Promise<ApiResponse<IAddress>> => {
     try {
       await axios.put(`${BASE_URL}/${id}`, address);
       return { success: true };

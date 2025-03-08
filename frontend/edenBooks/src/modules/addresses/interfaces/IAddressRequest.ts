@@ -1,5 +1,4 @@
-export interface IAddress {
-    ID:number
+export interface IAddressRequest {
     city: string;
     province: string;
     postalCode: string;
