@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IChatApi } from "../interfaces/IChatApi";
-import { IChat } from "../interfaces/IChat";
+import { IChatRequest } from "../interfaces/IChatRequest";
 import { IChatDto } from "../interfaces/IChatDto";
 import { axiosInstance } from "../../../api/axiosInstance";
 
@@ -9,7 +9,7 @@ import { axiosInstance } from "../../../api/axiosInstance";
 const BASE_URL = "/chats";
 
 export const chatApi: IChatApi = {
-  CreateChat: async ( chat: IChat): Promise<ApiResponse<IChatDto>> => {
+  CreateChat: async ( chat: IChatRequest): Promise<ApiResponse<IChatDto>> => {
     try {
       const response= await axiosInstance.post(BASE_URL, chat);
       const chatDto = response.data;
@@ -43,7 +43,7 @@ export const chatApi: IChatApi = {
       return { success: false, error: axiosError.request?.response };
     }
   },
-  UpdateChat: async (id, chat: IChat): Promise<ApiResponse<IChatDto>> => {
+  UpdateChat: async (id, chat: IChatRequest): Promise<ApiResponse<IChatDto>> => {
     try {
       await axiosInstance.put(`${BASE_URL}/${id}`, chat);
       return { success: true };

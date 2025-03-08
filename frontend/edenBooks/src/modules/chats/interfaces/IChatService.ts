@@ -1,12 +1,12 @@
 import { ApiResponse } from "../../../interfaces/apiResponse"
-import { IChat } from "./IChat"
+import { IChatRequest } from "./IChatRequest"
 import { IChatDto } from "./IChatDto"
 
 
 export interface IChatService{
-    CreateChat:(chat:IChat)=>Promise<ApiResponse<IChatDto>>
+    CreateChat:(chat:IChatRequest)=>Promise<ApiResponse<IChatDto>>
     GetChatById:(id:number)=>Promise<ApiResponse<IChatDto>>
     GetChats:()=>Promise<ApiResponse<IChatDto[]>>
-    UpdateChat:(id:number,chat:IChat)=>Promise<ApiResponse<IChatDto>>
+    UpdateChat:(id:number,chat:IChatRequest)=>Promise<ApiResponse<IChatDto>>
     DeleteChat:(id:number)=>Promise<ApiResponse<IChatDto>>
 } 
