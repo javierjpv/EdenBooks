@@ -1,4 +1,4 @@
-export interface IReviewDto {
+export interface IReviewResponse {
   ID: number;
   CreatedAt: string;
   UpdatedAt: string;

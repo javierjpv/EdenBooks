@@ -1,7 +1,7 @@
 import { IReview } from "../interfaces/IReview";
-import { IReviewDto } from "../interfaces/IReviewDto";
+import { IReviewResponse } from "../interfaces/IReviewDto";
 
-export const fromDto = (reviewDto: IReviewDto): IReview => {
+export const fromDto = (reviewDto: IReviewResponse): IReview => {
   const review: IReview = {
     ID: reviewDto.ID,
     comment: reviewDto.Comment,
