@@ -5,18 +5,16 @@ import (
 	"github.com/javierjpv/edenBooks/internal/modules/addresses/domain/entities"
 )
 
-type AddressService interface{
-	
-	CreateAddress(address dto.AddressDTO)(*entities.Address, error) 
+type AddressService interface {
+	CreateAddress(address dto.AddressRequest) (*entities.Address, error)
 
-	UpdateAddress(id uint,a dto.AddressDTO)error
+	UpdateAddress(id uint, a dto.AddressRequest) error
 
-	DeleteAddress(id uint)error
+	DeleteAddress(id uint) error
 
-	GetAddressByID(id uint)(*entities.Address,error)
+	GetAddressByID(id uint) (*entities.Address, error)
 
-	CheckExistingAdress(a dto.AddressDTO)(bool,error)
+	CheckExistingAdress(a dto.AddressRequest) (bool, error)
 
 	GetFilteredAddresses(filters map[string]string) ([]entities.Address, error)
-
 }

@@ -11,10 +11,10 @@ import (
 
 	addresstDTO "github.com/javierjpv/edenBooks/internal/modules/addresses/application/dto"
 	orderDTO "github.com/javierjpv/edenBooks/internal/modules/orders/application/dto"
-	transactionDTO "github.com/javierjpv/edenBooks/internal/modules/transactions/application/dto"
 	orderUsecase "github.com/javierjpv/edenBooks/internal/modules/orders/application/useCases"
-	transactionUsecase "github.com/javierjpv/edenBooks/internal/modules/transactions/application/useCases"
 	productDTO "github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
+	transactionDTO "github.com/javierjpv/edenBooks/internal/modules/transactions/application/dto"
+	transactionUsecase "github.com/javierjpv/edenBooks/internal/modules/transactions/application/useCases"
 	eventBusService "github.com/javierjpv/edenBooks/internal/shared/domain/services"
 	"github.com/labstack/echo/v4"
 	"github.com/stripe/stripe-go/v72"
@@ -23,23 +23,23 @@ import (
 )
 
 type CreateCheckoutSessionRequest struct {
-	Product    productDTO.ProductDTO  `json:"product"`
-	Shipping   addresstDTO.AddressDTO `json:"shipping"` //coger shipping y llamar al usecase de addres creas el addres solo si no existe y te devuelve el id
-	UserID     uint                   `json:"userID"`
-	CarrierID  uint                   `json:"carrierID"`
-	ProductID  uint                   `json:"productID"`
-	SuccessURL string                 `json:"successUrl"`
-	CancelURL  string                 `json:"cancelUrl"`
+	Product    productDTO.ProductDTO      `json:"product"`
+	Shipping   addresstDTO.AddressRequest `json:"shipping"` //coger shipping y llamar al usecase de addres creas el addres solo si no existe y te devuelve el id
+	UserID     uint                       `json:"userID"`
+	CarrierID  uint                       `json:"carrierID"`
+	ProductID  uint                       `json:"productID"`
+	SuccessURL string                     `json:"successUrl"`
+	CancelURL  string                     `json:"cancelUrl"`
 }
 
 type StripeHandler struct {
-	eventBusService     eventBusService.EventBus
-	orderUsecase        *orderUsecase.OrderUseCase
-	transactionUseCase  *transactionUsecase.TransactionUseCase
+	eventBusService    eventBusService.EventBus
+	orderUsecase       *orderUsecase.OrderUseCase
+	transactionUseCase *transactionUsecase.TransactionUseCase
 }
 
-func NewStripeHandler(eventBusService eventBusService.EventBus, orderUsecase *orderUsecase.OrderUseCase,transactionUseCase  *transactionUsecase.TransactionUseCase) *StripeHandler {
-	return &StripeHandler{eventBusService: eventBusService, orderUsecase: orderUsecase,transactionUseCase: transactionUseCase}
+func NewStripeHandler(eventBusService eventBusService.EventBus, orderUsecase *orderUsecase.OrderUseCase, transactionUseCase *transactionUsecase.TransactionUseCase) *StripeHandler {
+	return &StripeHandler{eventBusService: eventBusService, orderUsecase: orderUsecase, transactionUseCase: transactionUseCase}
 }
 
 func (h *StripeHandler) CreateCheckoutSession(c echo.Context) error {
@@ -49,7 +49,7 @@ func (h *StripeHandler) CreateCheckoutSession(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
 	}
 
-	order := orderDTO.NewOrderDTO("pagado", req.UserID, uint(1), req.CarrierID,uint(1))
+	order := orderDTO.NewOrderDTO("pagado", req.UserID, uint(1), req.CarrierID, uint(1))
 	productIds := []uint{req.ProductID}
 
 	if err := h.orderUsecase.CheckOrder(*order, productIds); err != nil {
@@ -84,11 +84,11 @@ func (h *StripeHandler) CreateCheckoutSession(c echo.Context) error {
 	}
 	shippingJSON, _ := json.Marshal(req.Shipping)
 	params.Params.Metadata = map[string]string{
-		"total":         fmt.Sprintf("%.2f", req.Product.Price),
-		"shipping":      string(shippingJSON), // Esto puede necesitar ser ajustado
-		"userID":        strconv.Itoa(int(req.UserID)),
-		"carrierID":     strconv.Itoa(int(req.CarrierID)),
-		"productID":     strconv.Itoa(int(req.ProductID)),
+		"total":     fmt.Sprintf("%.2f", req.Product.Price),
+		"shipping":  string(shippingJSON), // Esto puede necesitar ser ajustado
+		"userID":    strconv.Itoa(int(req.UserID)),
+		"carrierID": strconv.Itoa(int(req.CarrierID)),
+		"productID": strconv.Itoa(int(req.ProductID)),
 	}
 
 	session, err := session.New(params)
@@ -100,11 +100,11 @@ func (h *StripeHandler) CreateCheckoutSession(c echo.Context) error {
 }
 
 type HandleStripeWebhookRequest struct {
-	Total         float64                `json:"total"`
-	Shipping      addresstDTO.AddressDTO `json:"shipping"`
-	UserID        uint                   `json:"userID"`
-	CarrierID     uint                   `json:"carrierID"`
-	ProductID     uint                   `json:"productID"`
+	Total     float64                    `json:"total"`
+	Shipping  addresstDTO.AddressRequest `json:"shipping"`
+	UserID    uint                       `json:"userID"`
+	CarrierID uint                       `json:"carrierID"`
+	ProductID uint                       `json:"productID"`
 }
 
 func (h *StripeHandler) HandleStripeWebhook(c echo.Context) error {
@@ -179,7 +179,7 @@ func (h *StripeHandler) HandleStripeWebhook(c echo.Context) error {
 		log.Printf("productID convertido: %d", productID)
 
 		// Convertir shipping de string a objeto JSON
-		var shipping addresstDTO.AddressDTO
+		var shipping addresstDTO.AddressRequest
 		if err := json.Unmarshal([]byte(session.Metadata["shipping"]), &shipping); err != nil {
 			log.Printf("❌ Error parseando shipping: %v", err)
 			return c.JSON(http.StatusBadRequest, "Invalid shipping data")
@@ -187,22 +187,20 @@ func (h *StripeHandler) HandleStripeWebhook(c echo.Context) error {
 
 		log.Printf("Shipping convertido: %+v", shipping)
 
-
-
 		//Publicar evento en el Bus
-		transaction:=transactionDTO.NewTransactionDTO("tarjeta",float64(total))
-        createdTransaction,err:=h.transactionUseCase.CreateTransaction(*transaction)
-       if err!=nil {
-		return err
-	   }
-	   createdTransactionID:=createdTransaction.ID
+		transaction := transactionDTO.NewTransactionDTO("tarjeta", float64(total))
+		createdTransaction, err := h.transactionUseCase.CreateTransaction(*transaction)
+		if err != nil {
+			return err
+		}
+		createdTransactionID := createdTransaction.ID
 
 		eventData := map[string]interface{}{
 			"shipping":      shipping,
 			"userID":        uint(userID),
 			"carrierID":     uint(carrierID),
 			"productID":     uint(productID),
-			"transactionID":     uint(createdTransactionID),
+			"transactionID": uint(createdTransactionID),
 		}
 		h.eventBusService.Publish("payment.created", eventData)
 

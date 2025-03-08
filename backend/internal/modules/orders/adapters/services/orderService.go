@@ -3,9 +3,11 @@ package services
 import (
 	"fmt"
 	"log"
+
 	"github.com/javierjpv/edenBooks/internal/modules/addresses/application/dto"
+
 	// addressEntities "github.com/javierjpv/edenBooks/internal/modules/addresses/domain/entities"
-    // productDTO "github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
+	// productDTO "github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
 	addressServices "github.com/javierjpv/edenBooks/internal/modules/addresses/domain/services"
 	carrierServices "github.com/javierjpv/edenBooks/internal/modules/carriers/domain/services"
 	orderDTO "github.com/javierjpv/edenBooks/internal/modules/orders/application/dto"
@@ -63,8 +65,7 @@ func NewOrderService(repo repositories.OrderRepository, productService productSe
 // 	return nil
 // }
 
-
-func (s *OrderService) CheckOrder(o orderDTO.OrderDTO, productsIDs []uint) (error) {
+func (s *OrderService) CheckOrder(o orderDTO.OrderDTO, productsIDs []uint) error {
 
 	if _, err := s.userService.GetUserByID(o.UserID); err != nil {
 		return err
@@ -78,13 +79,13 @@ func (s *OrderService) CheckOrder(o orderDTO.OrderDTO, productsIDs []uint) (erro
 		return err
 	}
 
-    //checkTransation???
+	//checkTransation???
 	for _, productID := range productsIDs {
-        product, err := s.productService.GetProductByID(productID);
-		if  err != nil {
+		product, err := s.productService.GetProductByID(productID)
+		if err != nil {
 			return err
 		}
-        if product.Sold {
+		if product.Sold {
 			return fmt.Errorf("product has already been sold")
 		}
 	}
@@ -93,12 +94,11 @@ func (s *OrderService) CheckOrder(o orderDTO.OrderDTO, productsIDs []uint) (erro
 
 func (s *OrderService) CreateOrder(o orderDTO.OrderDTO, productsIDs []uint) error {
 
-    
-    if err:=s.CheckOrder(o,productsIDs);err!=nil {
-        return err
-    }
+	if err := s.CheckOrder(o, productsIDs); err != nil {
+		return err
+	}
 
-	order := entities.NewOrder(o.State, o.UserID, o.AddressID, o.CarrierID,o.TransactionID)
+	order := entities.NewOrder(o.State, o.UserID, o.AddressID, o.CarrierID, o.TransactionID)
 	orderID, err := s.repo.CreateOrder(order)
 	if err != nil {
 		return err
@@ -137,81 +137,80 @@ func (s *OrderService) GetFilteredOrders(filters map[string]string) (*[]entities
 // Suscribir al evento
 func (s *OrderService) ListenPaymentCreated() {
 	err := s.eventBusService.Subscribe("payment.created", func(data interface{}) {
-        fmt.Println("Evento recibido en OrderService:", data)
-        
-        eventData, ok := data.(map[string]interface{})
-        if !ok {
-            fmt.Println("Error al procesar el evento")
-            return
-        }
+		fmt.Println("Evento recibido en OrderService:", data)
 
-        shippingData, ok := eventData["shipping"].(dto.AddressDTO)
-        if !ok {
-            fmt.Printf("Error: no se puede convertir 'shipping' a AddressDTO. Tipo recibido: %T\n", eventData["shipping"])
-            return
-        }
+		eventData, ok := data.(map[string]interface{})
+		if !ok {
+			fmt.Println("Error al procesar el evento")
+			return
+		}
 
-        // Crear el DTO de dirección usando los datos del shipping
-        addressDto := dto.NewAddressDTO(
-            shippingData.City,
-            shippingData.Province,
-            shippingData.PostalCode,
-            shippingData.Country,
-            shippingData.Street,
-            shippingData.Number,
-        )
+		shippingData, ok := eventData["shipping"].(dto.AddressRequest)
+		if !ok {
+			fmt.Printf("Error: no se puede convertir 'shipping' a AddressDTO. Tipo recibido: %T\n", eventData["shipping"])
+			return
+		}
 
-        // Crear dirección
-        createdAddress, err := s.addressService.CreateAddress(*addressDto)
-        if err != nil {
-            fmt.Println("Error al crear la dirección:", err)
-            return
-        }
+		// Crear el DTO de dirección usando los datos del shipping
+		addressDto := dto.NewAddressRequest(
+			shippingData.City,
+			shippingData.Province,
+			shippingData.PostalCode,
+			shippingData.Country,
+			shippingData.Street,
+			shippingData.Number,
+		)
 
-        // Obtener los IDs directamente como uint
-        userID, ok := eventData["userID"].(uint)
-        if !ok {
-            fmt.Printf("Error: userID no es uint. Tipo recibido: %T\n", eventData["userID"])
-            return
-        }
+		// Crear dirección
+		createdAddress, err := s.addressService.CreateAddress(*addressDto)
+		if err != nil {
+			fmt.Println("Error al crear la dirección:", err)
+			return
+		}
 
-        carrierID, ok := eventData["carrierID"].(uint)
-        if !ok {
-            fmt.Printf("Error: carrierID no es uint. Tipo recibido: %T\n", eventData["carrierID"])
-            return
-        }
+		// Obtener los IDs directamente como uint
+		userID, ok := eventData["userID"].(uint)
+		if !ok {
+			fmt.Printf("Error: userID no es uint. Tipo recibido: %T\n", eventData["userID"])
+			return
+		}
 
-        productID, ok := eventData["productID"].(uint)
-        if !ok {
-            fmt.Printf("Error: productID no es uint. Tipo recibido: %T\n", eventData["productID"])
-            return
-        }
-        transactionID, ok := eventData["transactionID"].(uint)
-        if !ok {
-            fmt.Printf("Error: transactionID no es uint. Tipo recibido: %T\n", eventData["transactionID"])
-            return
-        }
+		carrierID, ok := eventData["carrierID"].(uint)
+		if !ok {
+			fmt.Printf("Error: carrierID no es uint. Tipo recibido: %T\n", eventData["carrierID"])
+			return
+		}
 
-  
-        orderDto := orderDTO.NewOrderDTO("pagado", userID, createdAddress.ID, carrierID,transactionID)
-        productIds := []uint{productID}
+		productID, ok := eventData["productID"].(uint)
+		if !ok {
+			fmt.Printf("Error: productID no es uint. Tipo recibido: %T\n", eventData["productID"])
+			return
+		}
+		transactionID, ok := eventData["transactionID"].(uint)
+		if !ok {
+			fmt.Printf("Error: transactionID no es uint. Tipo recibido: %T\n", eventData["transactionID"])
+			return
+		}
 
-        err = s.CreateOrder(*orderDto, productIds)
-        if err != nil {
-            log.Printf("❌ Error al crear la orden para el usuario %v: %v\n", userID, err)
-            return
-        }
+		orderDto := orderDTO.NewOrderDTO("pagado", userID, createdAddress.ID, carrierID, transactionID)
+		productIds := []uint{productID}
 
-        log.Printf("✅ Orden creada exitosamente 🎉\n"+
-            "📦 Producto ID: %v\n"+
-            "🛵 Transportista ID: %v\n"+
-            "📍 Dirección ID: %v\n"+
-            "👤 Usuario ID: %v\n",
-            productID, carrierID, createdAddress.ID, userID,
-        )
-    })
+		err = s.CreateOrder(*orderDto, productIds)
+		if err != nil {
+			log.Printf("❌ Error al crear la orden para el usuario %v: %v\n", userID, err)
+			return
+		}
 
-    if err != nil {
-        fmt.Println("Error al suscribirse al evento:", err)
-    }
+		log.Printf("✅ Orden creada exitosamente 🎉\n"+
+			"📦 Producto ID: %v\n"+
+			"🛵 Transportista ID: %v\n"+
+			"📍 Dirección ID: %v\n"+
+			"👤 Usuario ID: %v\n",
+			productID, carrierID, createdAddress.ID, userID,
+		)
+	})
+
+	if err != nil {
+		fmt.Println("Error al suscribirse al evento:", err)
+	}
 }

@@ -21,17 +21,17 @@ func NewAddressUseCase(service services.AddressService) *AddressUseCase {
 	return &AddressUseCase{service: service}
 }
 
-func (u *AddressUseCase) CreateAddress(address dto.AddressDTO) (*entities.Address, error)  {
+func (u *AddressUseCase) CreateAddress(address dto.AddressRequest) (*entities.Address, error) {
 	if address.City == "" || address.Province == "" || address.PostalCode == "" || address.Country == "" || address.Street == "" {
-		return nil,ErrMissingFields
+		return nil, ErrMissingFields
 	}
 	if address.Number <= 0 {
-		return nil,fmt.Errorf("adrees number can not be <= 0")
+		return nil, fmt.Errorf("adrees number can not be <= 0")
 	}
 	return u.service.CreateAddress(address)
 }
 
-func (u *AddressUseCase) UpdateAddress(id uint, address dto.AddressDTO) error {
+func (u *AddressUseCase) UpdateAddress(id uint, address dto.AddressRequest) error {
 	if id == 0 {
 		return ErrInvalidID
 	}
@@ -67,7 +67,7 @@ func (u *AddressUseCase) GetFilteredAddresses(filters map[string]string) ([]enti
 
 	// Validar columna de orden si está presente
 	if sortBy, exists := filters["sort_by"]; exists {
-		validSortColumns := map[string]bool{"created_at": true, "updated_at": true, "city": true, "province": true, "postal_code": true, "country": true,"street": true,"number": true}
+		validSortColumns := map[string]bool{"created_at": true, "updated_at": true, "city": true, "province": true, "postal_code": true, "country": true, "street": true, "number": true}
 		if !validSortColumns[sortBy] {
 			delete(filters, "sort_by") // Eliminar si no es válido
 		}
