@@ -188,7 +188,7 @@ func (h *StripeHandler) HandleStripeWebhook(c echo.Context) error {
 		log.Printf("Shipping convertido: %+v", shipping)
 
 		//Publicar evento en el Bus
-		transaction := transactionDTO.NewTransactionDTO("tarjeta", float64(total))
+		transaction := transactionDTO.NewTransactionRequest("tarjeta", float64(total))
 		createdTransaction, err := h.transactionUseCase.CreateTransaction(*transaction)
 		if err != nil {
 			return err

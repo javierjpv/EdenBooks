@@ -3,57 +3,57 @@ package usecases
 import (
 	"fmt"
 
-	"github.com/javierjpv/edenBooks/internal/modules/transactions/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/transactions/application/dto"
+	"github.com/javierjpv/edenBooks/internal/modules/transactions/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/transactions/domain/services"
 )
 
 var (
-    ErrMissingFields = fmt.Errorf("all fields are required")
-    ErrInvalid     = fmt.Errorf("invalid ID")
+	ErrMissingFields = fmt.Errorf("all fields are required")
+	ErrInvalid       = fmt.Errorf("invalid ID")
 )
+
 type TransactionUseCase struct {
 	service services.TransactionService
 }
 
-
-func NewTransactionUseCase(service services.TransactionService)*TransactionUseCase{
+func NewTransactionUseCase(service services.TransactionService) *TransactionUseCase {
 	return &TransactionUseCase{service: service}
 }
 
-func (u *TransactionUseCase)CreateTransaction(t dto.TransactionDTO)(*entities.Transaction,error){
+func (u *TransactionUseCase) CreateTransaction(t dto.TransactionRequest) (*entities.Transaction, error) {
 	if t.PaymentMethod == "" {
-		return nil,ErrMissingFields
+		return nil, ErrMissingFields
 	}
-	if t.Total <0 {
-		return nil,fmt.Errorf("total can not be < 0")
+	if t.Total < 0 {
+		return nil, fmt.Errorf("total can not be < 0")
 	}
 	return u.service.CreateTransaction(t)
 }
 
-func (u *TransactionUseCase)UpdateTransaction(id uint,t dto.TransactionDTO)error{
+func (u *TransactionUseCase) UpdateTransaction(id uint, t dto.TransactionRequest) error {
 	if t.PaymentMethod == "" {
 		return ErrMissingFields
 	}
-	if t.Total <0 {
+	if t.Total < 0 {
 		return fmt.Errorf("total can not be < 0")
 	}
-	if  id==0 {
+	if id == 0 {
 		return ErrInvalid
 	}
-	return u.service.UpdateTransaction(id,t)
+	return u.service.UpdateTransaction(id, t)
 }
 
-func (u *TransactionUseCase)DeleteTransaction(id uint)error{
-	if  id==0  {
+func (u *TransactionUseCase) DeleteTransaction(id uint) error {
+	if id == 0 {
 		return ErrInvalid
 	}
 	return u.service.DeleteTransaction(id)
 }
 
-func (u *TransactionUseCase)GetTransactionByID(id uint)(*entities.Transaction,error){
-	if  id==0  {
-		return nil,ErrInvalid
+func (u *TransactionUseCase) GetTransactionByID(id uint) (*entities.Transaction, error) {
+	if id == 0 {
+		return nil, ErrInvalid
 	}
 	return u.service.GetTransactionByID(id)
 }
