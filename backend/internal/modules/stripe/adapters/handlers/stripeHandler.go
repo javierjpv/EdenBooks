@@ -23,7 +23,7 @@ import (
 )
 
 type CreateCheckoutSessionRequest struct {
-	Product    productDTO.ProductDTO      `json:"product"`
+	Product    productDTO.ProductRequest  `json:"product"`
 	Shipping   addresstDTO.AddressRequest `json:"shipping"` //coger shipping y llamar al usecase de addres creas el addres solo si no existe y te devuelve el id
 	UserID     uint                       `json:"userID"`
 	CarrierID  uint                       `json:"carrierID"`
