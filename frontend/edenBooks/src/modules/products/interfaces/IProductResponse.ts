@@ -11,6 +11,5 @@ export interface IProductResponse {
     UserID: number
     ImageURL: string
     Sold:boolean
-    Reviews: null
     is_favorite: boolean
   }

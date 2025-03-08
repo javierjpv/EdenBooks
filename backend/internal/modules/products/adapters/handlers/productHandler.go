@@ -164,7 +164,7 @@ func (h *ProductHandler) GetFilteredProducts(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-
+	fmt.Println("products get filtered",products);
 	return c.JSON(http.StatusOK, products)
 }
 func (h *ProductHandler) GetProductsWithFavorites(c echo.Context) error {
@@ -191,6 +191,6 @@ func (h *ProductHandler) GetProductsWithFavorites(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-
+	fmt.Println("products GetProductsWithFavorites",products);
 	return c.JSON(http.StatusOK, products)
 }

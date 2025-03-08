@@ -8,5 +8,6 @@ export interface IProduct{
     ImageURL: string|null
     Sold?:boolean
     // order?
+    is_favorite?: boolean
     
 }

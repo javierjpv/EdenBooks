@@ -9,7 +9,7 @@ const BASE_URL = "http://localhost:6969/products";
 export const productApi: IProductApi = {
 
   GetProducts: async (): Promise<IProductDto[]> => {
-    const response = await axios.get<IProductDto[]>(BASE_URL);
+    const response = await axiosInstance.get<IProductDto[]>(BASE_URL);
     return response.data;
   },
   GetFavorites: async (): Promise<IProductDto[]> => {

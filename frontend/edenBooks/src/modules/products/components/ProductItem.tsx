@@ -44,91 +44,96 @@ export const ProductItem = ({ product }: { product: IProduct }) => {
   };
 
   return (
-    
-      <Card>
-        <Link
-          to={`/products/${product.ID}`}
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "red" }} aria-label="product">
-                {product.Name[0]}
-              </Avatar>
-            }
-            action={
-              <IconButton aria-label="settings">
-                <MoreVert />
-              </IconButton>
-            }
-            title={product.Name}
-          />
+    <Card>
+      <Link
+        to={`/products/${product.ID}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: "red" }} aria-label="product">
+              {product.Name[0]}
+            </Avatar>
+          }
+          action={
+            <IconButton aria-label="settings">
+              <MoreVert />
+            </IconButton>
+          }
+          title={product.Name}
+        />
 
-          <CardMedia
-            component="img"
-            height="330"
-            image={product.ImageURL ?? "/418eyXxdCsL._SY445_SX342_.jpg"}
-            // image={product.ImageURL|| "/418eyXxdCsL._SY445_SX342_.jpg"}
-            alt={product.Name}
-          />
+        <CardMedia
+          component="img"
+          height="330"
+          image={product.ImageURL ?? "/418eyXxdCsL._SY445_SX342_.jpg"}
+          // image={product.ImageURL|| "/418eyXxdCsL._SY445_SX342_.jpg"}
+          alt={product.Name}
+        />
 
-          <CardContent>
+        <CardContent>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {product.Name}
+          </Typography>
 
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {product.Name} 
-            </Typography>
-
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             Precio: {product.Price} €
-            </Typography>
-        
-            {user?.userState === "AUTHENTICATED" &&
-              Number(user?.ID) !== product.UserID && (
-                <>
-                  {product.Sold ? (
-                    <Typography variant="body1" gutterBottom color="error">
-                      VENDIDO
-                    </Typography>
-                  ) : (
-                    <Typography variant="body1" gutterBottom color="warning">
-                      DISPONIBLE
-                    </Typography>
-                  )}
-                </>
-              )}
-          </CardContent>
-        </Link>
+          </Typography>
 
-        <CardActions disableSpacing>
-          {user?.userState === "AUTHENTICATED" &&
-            Number(user?.ID) === product.UserID && (
-              <>
-                <IconButton onClick={handleEdit} aria-label="share">
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  disabled={loadingDelete}
-                  onClick={() => product.ID && handleDelete(product.ID)}
-                  aria-label="delete"
-                  style={{ display: "ID" in product ? "inline-flex" : "none" }}
-                >
-                  {loadingDelete ? <CircularProgress size={22} /> : <Delete />}
-                </IconButton>
-              </>
-            )}
           {user?.userState === "AUTHENTICATED" &&
             Number(user?.ID) !== product.UserID && (
               <>
-              {!product.Sold && (
-                <IconButton aria-label="add to favorites">
-                <Favorite />
-              </IconButton>
-                  ) }
-
+                {product.Sold ? (
+                  <Typography variant="body1" gutterBottom color="error">
+                    VENDIDO
+                  </Typography>
+                ) : (
+                  <Typography variant="body1" gutterBottom color="warning">
+                    DISPONIBLE
+                  </Typography>
+                )}
               </>
             )}
-        </CardActions>
-      </Card>
-    
+        </CardContent>
+      </Link>
+
+      <CardActions disableSpacing>
+        {user?.userState === "AUTHENTICATED" &&
+          Number(user?.ID) === product.UserID && (
+            <>
+              <IconButton onClick={handleEdit} aria-label="share">
+                <Edit />
+              </IconButton>
+              <IconButton
+                disabled={loadingDelete}
+                onClick={() => product.ID && handleDelete(product.ID)}
+                aria-label="delete"
+                style={{ display: "ID" in product ? "inline-flex" : "none" }}
+              >
+                {loadingDelete ? <CircularProgress size={22} /> : <Delete />}
+              </IconButton>
+            </>
+          )}
+        {user?.userState === "AUTHENTICATED" &&
+          Number(user?.ID) !== product.UserID && (
+            <>
+              {!product.Sold && (
+                <>
+                  {product.is_favorite && (
+                    <IconButton color="error" aria-label="add to favorites">
+                      <Favorite />
+                    </IconButton>
+                  )}
+                  {!product.is_favorite && (
+                    <IconButton aria-label="add to favorites">
+                      <Favorite />
+                    </IconButton>
+                  )}
+                </>
+              )}
+            </>
+          )}
+      </CardActions>
+    </Card>
   );
 };

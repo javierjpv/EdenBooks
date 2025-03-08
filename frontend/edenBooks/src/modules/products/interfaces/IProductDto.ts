@@ -12,5 +12,6 @@ export interface IProductDto{
     ImageURL: string
     Sold:boolean
     Reviews: null
+    is_favorite: boolean
 }
 
