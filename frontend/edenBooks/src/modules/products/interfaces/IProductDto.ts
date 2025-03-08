@@ -1,4 +1,4 @@
-export interface IProductDto{
+export interface IProductResponse{
     ID:number
     CreatedAt:string
     UpdatedAt: string

@@ -1,5 +1,5 @@
 import { IProductApi } from "../interfaces/IProductApi";
-import { IProductDto } from "../interfaces/IProductDto";
+import { IProductResponse } from "../interfaces/IProductDto";
 import axios from "axios";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { IProductRequest } from "../interfaces/IProductResquest";
@@ -8,16 +8,16 @@ const BASE_URL = "http://localhost:6969/products";
 
 export const productApi: IProductApi = {
 
-  GetProducts: async (): Promise<IProductDto[]> => {
-    const response = await axiosInstance.get<IProductDto[]>(BASE_URL);
+  GetProducts: async (): Promise<IProductResponse[]> => {
+    const response = await axiosInstance.get<IProductResponse[]>(BASE_URL);
     return response.data;
   },
-  GetFavorites: async (): Promise<IProductDto[]> => {
-    const response = await axiosInstance.get<IProductDto[]>(`${BASE_URL}/favorites`);
+  GetFavorites: async (): Promise<IProductResponse[]> => {
+    const response = await axiosInstance.get<IProductResponse[]>(`${BASE_URL}/favorites`);
     return response.data;
   },
-  GetProductById: async (id: number): Promise<IProductDto> => {
-    const response = await axiosInstance.get<IProductDto>(`${BASE_URL}/${id}`);
+  GetProductById: async (id: number): Promise<IProductResponse> => {
+    const response = await axiosInstance.get<IProductResponse>(`${BASE_URL}/${id}`);
     return response.data;
   },
   CreateProduct: async (product: IProductRequest): Promise<void> => {
