@@ -1,5 +1,5 @@
 export interface ICarrier {
-    ID?:number
+    ID:number
     name:string
     contact:string
   }

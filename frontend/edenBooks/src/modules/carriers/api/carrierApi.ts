@@ -4,11 +4,12 @@ import { ICarrierApi } from "../interfaces/ICarrierApi";
 import { ICarrier } from "../interfaces/ICarrier";
 import { CarrierFromDto } from "../mappers/carrierMapper";
 import { ICarrierDto } from "../interfaces/ICarrierDto";
+import { ICarrierRequest } from "../interfaces/ICarrierRequest";
 
 const BASE_URL = "http://localhost:6969/carriers";
 
 export const carrierApi: ICarrierApi = {
-  CreateCarrier: async ( carrier: ICarrier): Promise<ApiResponse<ICarrier>> => {
+  CreateCarrier: async ( carrier: ICarrierRequest): Promise<ApiResponse<ICarrier>> => {
     try {
       const response= await axios.post(BASE_URL, carrier);
       const carrierDto = response.data;
@@ -47,7 +48,7 @@ export const carrierApi: ICarrierApi = {
       return { success: false, error: axiosError.request?.response };
     }
   },
-  UpdateCarrier: async (id, carrier: ICarrier): Promise<ApiResponse<ICarrier>> => {
+  UpdateCarrier: async (id, carrier: ICarrierRequest): Promise<ApiResponse<ICarrier>> => {
     try {
       await axios.put(`${BASE_URL}/${id}`, carrier);
       return { success: true };
