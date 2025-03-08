@@ -4,11 +4,12 @@ import { IMessageApi } from "../interfaces/IMessageApi";
 import { IMessage } from "../interfaces/IMessage";
 import { MessageFromDto} from "../mappers/messageMapper";
 import { IMessageDto } from "../interfaces/IMessageDto";
+import { IMessageRequest } from "../interfaces/IMessageRequest";
 
 const BASE_URL = "http://localhost:6969/messages";
 
 export const messageApi: IMessageApi = {
-  CreateMessage: async ( message: IMessage): Promise<ApiResponse<IMessage>> => {
+  CreateMessage: async ( message: IMessageRequest): Promise<ApiResponse<IMessage>> => {
     try {
       const response= await axios.post(BASE_URL, message);
       const messageDto = response.data;
@@ -47,7 +48,7 @@ export const messageApi: IMessageApi = {
       return { success: false, error: axiosError.request?.response };
     }
   },
-  UpdateMessage: async (id, message: IMessage): Promise<ApiResponse<IMessage>> => {
+  UpdateMessage: async (id, message: IMessageRequest): Promise<ApiResponse<IMessage>> => {
     try {
       await axios.put(`${BASE_URL}/${id}`, message);
       return { success: true };

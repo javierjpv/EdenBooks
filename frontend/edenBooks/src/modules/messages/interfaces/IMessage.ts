@@ -1,5 +1,5 @@
 export interface IMessage{
-    ID?: number;
+    ID: number;
     content:string  
 	seen:boolean       
 	status:string    

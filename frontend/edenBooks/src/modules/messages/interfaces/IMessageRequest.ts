@@ -1,8 +1,4 @@
-export interface IMessageDto{
-    ID: number;
-    CreatedAt: string;
-    UpdatedAt: string;
-    DeletedAt: null | string;
+export interface IMessageRequest{
     Content:string  
 	Seen:boolean       
 	Status:string    
@@ -10,5 +6,3 @@ export interface IMessageDto{
 	SenderID:number  
     ReceiverID:number
 }
-
-

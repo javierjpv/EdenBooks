@@ -16,6 +16,7 @@ import { IChatDto } from "../interfaces/IChatDto";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
 import { ArrowBackIosNew, Send } from "@mui/icons-material";
 import { IMessageDto } from "../../messages/interfaces/IMessageDto";
+import { IMessageRequest } from "../../messages/interfaces/IMessageRequest";
 
 export const ChatDetail = () => {
   const { id } = useParams();
@@ -98,7 +99,7 @@ export const ChatDetail = () => {
         receivedMessage.SenderID == selectedSenderID
       ) {
         setchat((prevChat) => {
-          if (!prevChat) return prevChat;
+           if (!prevChat) return prevChat;
 
           return {
             ...prevChat,
@@ -136,7 +137,7 @@ export const ChatDetail = () => {
       socket.current.readyState === WebSocket.OPEN &&
       newMessage.trim() !== ""
     ) {
-      const messageData: IMessageDto = {
+      const messageData: IMessageRequest = {
         Content: newMessage,
         Seen: false,
         Status: "sent",
