@@ -9,45 +9,45 @@ import (
 )
 
 var (
-    ErrMissingFields = fmt.Errorf("all fields are required")
-    ErrInvalidID     = fmt.Errorf("invalid Carrier ID")
+	ErrMissingFields = fmt.Errorf("all fields are required")
+	ErrInvalidID     = fmt.Errorf("invalid Carrier ID")
 )
 
-type CarrierUseCase struct{
+type CarrierUseCase struct {
 	service services.CarrierService
 }
 
-func NewCarrierUseCase(service services.CarrierService)*CarrierUseCase{
+func NewCarrierUseCase(service services.CarrierService) *CarrierUseCase {
 	return &CarrierUseCase{service: service}
 }
 
-func (u *CarrierUseCase) CreateCarrier(carrier dto.CarrierDTO)error{
+func (u *CarrierUseCase) CreateCarrier(carrier dto.CarrierRequest) error {
 	if carrier.Contact == "" || carrier.Name == "" {
-        return ErrMissingFields
-    }
+		return ErrMissingFields
+	}
 	return u.service.CreateCarrier(carrier)
 }
 
-func (u *CarrierUseCase) UpdateCarrier(id uint, carrier dto.CarrierDTO) error {
-	if id==0 {
+func (u *CarrierUseCase) UpdateCarrier(id uint, carrier dto.CarrierRequest) error {
+	if id == 0 {
 		return ErrInvalidID
 	}
-	if carrier.Contact == "" || carrier.Name == ""{
-        return ErrMissingFields
-    }
-	return u.service.UpdateCarrier(id,carrier)
+	if carrier.Contact == "" || carrier.Name == "" {
+		return ErrMissingFields
+	}
+	return u.service.UpdateCarrier(id, carrier)
 }
 
 func (u *CarrierUseCase) DeleteCarrier(id uint) error {
-	if id==0 {
+	if id == 0 {
 		return ErrInvalidID
 	}
 	return u.service.DeleteCarrier(id)
 }
 
 func (u *CarrierUseCase) GetCarrierByID(id uint) (*entities.Carrier, error) {
-	if id==0 {
-		return nil,ErrInvalidID
+	if id == 0 {
+		return nil, ErrInvalidID
 	}
 	return u.service.GetCarrierByID(id)
 }
