@@ -1,6 +1,6 @@
 import { categoryApi } from "../api/categoryApi";
 import { ICategoryService } from "../interfaces/ICategoryService";
-import { FromCategoryDto } from "../mappers/categoryMapper";
+import { FromCategoryResponse } from "../mappers/categoryMapper";
 import { ICategory } from "../interfaces/ICategory";
 import { ICategoryResponse } from "../interfaces/ICategoryResponse";
 import { ICategoryRequest } from "../interfaces/ICategoryRequest";
@@ -9,7 +9,7 @@ export const categoryService: ICategoryService = {
     try {
       const categoriesDto: ICategoryResponse[] = await categoryApi.GetCategories();
       const categories: ICategory[] = categoriesDto.map((categoryDto) =>
-        FromCategoryDto(categoryDto)
+        FromCategoryResponse(categoryDto)
       );
       return categories;
     } catch (error) {
@@ -29,7 +29,7 @@ export const categoryService: ICategoryService = {
   GetCategoryById: async (id: number): Promise<ICategory> => {
     try {
       const categoryDto: ICategoryResponse = await categoryApi.GetCategoryById(id);
-      const category: ICategory = FromCategoryDto(categoryDto);
+      const category: ICategory = FromCategoryResponse(categoryDto);
       return category;
     } catch (error) {
       console.log("Error al obtener categoria por id", error);

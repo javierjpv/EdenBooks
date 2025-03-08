@@ -3,7 +3,7 @@ import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IReviewApi } from "../interfaces/IReviewApi";
 import { IReviewResponse } from "../interfaces/IReviewResponse";
 import { IReview } from "../interfaces/IReview";
-import { fromDto } from "../mappers/reviewMapper";
+import { FromReviewResponse } from "../mappers/reviewMapper";
 
 const BASE_URL = "http://localhost:6969/reviews";
 
@@ -13,7 +13,7 @@ export const reviewApi: IReviewApi = {
       const response = await axios.get<IReviewResponse[]>(BASE_URL);
       const reviewsDto = response.data;
       const reviews: IReview[] = reviewsDto.map((reviewDto) =>
-        fromDto(reviewDto)
+        FromReviewResponse(reviewDto)
       );
 
       return { success: true, data: reviews };
@@ -27,7 +27,7 @@ export const reviewApi: IReviewApi = {
       const response = await axios.get<IReviewResponse>(`${BASE_URL}/${id}`);
       const reviewDto = response.data;
 
-      const review: IReview = fromDto(reviewDto);
+      const review: IReview = FromReviewResponse(reviewDto);
 
       return { success: true, data: review };
     } catch (error) {

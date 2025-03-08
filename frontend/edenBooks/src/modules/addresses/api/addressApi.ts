@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IAddressApi } from "../interfaces/IAddressApi";
 import { IAddress } from "../interfaces/IAddress";
-import { fromDto } from "../mappers/addressMapper";
+import { FromAddressResponse } from "../mappers/addressMapper";
 import { IAddressResponse } from "../interfaces/IAdressResponse";
 import { IAddressRequest } from "../interfaces/IAddressRequest";
 
@@ -13,7 +13,7 @@ export const addressApi: IAddressApi = {
     try {
       const response= await axios.post(BASE_URL, address);
       const addressDto = response.data;
-      const createdAddresss: IAddress = fromDto(addressDto);
+      const createdAddresss: IAddress = FromAddressResponse(addressDto);
 
       return { success: true,data:createdAddresss};
     } catch (error) {
@@ -26,7 +26,7 @@ export const addressApi: IAddressApi = {
       const response = await axios.get<IAddressResponse[]>(BASE_URL);
       const addresssDto = response.data;
       const addresss: IAddress[] = addresssDto.map((addressDto) =>
-        fromDto(addressDto)
+        FromAddressResponse(addressDto)
       );
 
       return { success: true, data: addresss };
@@ -40,7 +40,7 @@ export const addressApi: IAddressApi = {
       const response = await axios.get<IAddressResponse>(`${BASE_URL}/${id}`);
       const addressDto = response.data;
 
-      const address: IAddress = fromDto(addressDto);
+      const address: IAddress = FromAddressResponse(addressDto);
 
       return { success: true, data: address };
     } catch (error) {

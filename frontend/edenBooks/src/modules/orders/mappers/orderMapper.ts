@@ -1,7 +1,7 @@
 import { IOrder } from "../interfaces/IOrder";
 import { IOrderResponse } from "../interfaces/IOrderResponse";
 
-export const OrderFromDto=(orderDto:IOrderResponse):IOrder=>{
+export const FromOrderResponse=(orderDto:IOrderResponse):IOrder=>{
 const order:IOrder={
 ID:orderDto.ID,
 state:orderDto.State,

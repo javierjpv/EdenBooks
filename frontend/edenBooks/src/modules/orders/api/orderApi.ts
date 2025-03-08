@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IOrderApi } from "../interfaces/IOrderApi";
 import { IOrder } from "../interfaces/IOrder";
-import { OrderFromDto} from "../mappers/orderMapper";
+import { FromOrderResponse} from "../mappers/orderMapper";
 import { IOrderResponse } from "../interfaces/IOrderResponse";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { IOrderRequest } from "../interfaces/IOrderRequest";
@@ -16,7 +16,7 @@ export const orderApi: IOrderApi = {
     try {
       const response= await axiosInstance.post(BASE_URL, order);
       const orderDto = response.data;
-      const createdOrders: IOrder = OrderFromDto(orderDto);
+      const createdOrders: IOrder = FromOrderResponse(orderDto);
 
       return { success: true,data:createdOrders};
     } catch (error) {
@@ -30,7 +30,7 @@ export const orderApi: IOrderApi = {
       const response = await axiosInstance.get<IOrderResponse[]>(BASE_URL);
       const ordersDto = response.data;
       const orders: IOrder[] = ordersDto.map((orderDto) =>
-        OrderFromDto(orderDto)
+        FromOrderResponse(orderDto)
       );
 
       return { success: true, data: orders };
@@ -44,7 +44,7 @@ export const orderApi: IOrderApi = {
       const response = await axiosInstance.get<IOrderResponse>(`${BASE_URL}/${id}`);
       const orderDto = response.data;
 
-      const order: IOrder = OrderFromDto(orderDto);
+      const order: IOrder = FromOrderResponse(orderDto);
 
       return { success: true, data: order };
     } catch (error) {

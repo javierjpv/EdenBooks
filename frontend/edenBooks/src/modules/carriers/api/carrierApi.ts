@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { ApiResponse } from "../../../interfaces/apiResponse";
 import { ICarrierApi } from "../interfaces/ICarrierApi";
 import { ICarrier } from "../interfaces/ICarrier";
-import { CarrierFromDto } from "../mappers/carrierMapper";
+import { FromCarrierResponse } from "../mappers/carrierMapper";
 import { ICarrierResponse } from "../interfaces/ICarrierResponse";
 import { ICarrierRequest } from "../interfaces/ICarrierRequest";
 
@@ -13,7 +13,7 @@ export const carrierApi: ICarrierApi = {
     try {
       const response= await axios.post(BASE_URL, carrier);
       const carrierDto = response.data;
-      const createdCarrier: ICarrier = CarrierFromDto(carrierDto);
+      const createdCarrier: ICarrier = FromCarrierResponse(carrierDto);
 
       return { success: true,data:createdCarrier};
     } catch (error) {
@@ -26,7 +26,7 @@ export const carrierApi: ICarrierApi = {
       const response = await axios.get<ICarrierResponse[]>(BASE_URL);
       const carriersDto = response.data;
       const carriers: ICarrier[] = carriersDto.map((carrierDto) =>
-        CarrierFromDto(carrierDto)
+        FromCarrierResponse(carrierDto)
       );
 
       return { success: true, data: carriers };
@@ -40,7 +40,7 @@ export const carrierApi: ICarrierApi = {
       const response = await axios.get<ICarrierResponse>(`${BASE_URL}/${id}`);
       const carrierDto = response.data;
 
-      const carrier: ICarrier = CarrierFromDto(carrierDto);
+      const carrier: ICarrier = FromCarrierResponse(carrierDto);
 
       return { success: true, data: carrier };
     } catch (error) {

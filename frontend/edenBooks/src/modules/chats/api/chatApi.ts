@@ -4,7 +4,7 @@ import { IChatApi } from "../interfaces/IChatApi";
 import { IChatRequest } from "../interfaces/IChatRequest";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { IChat } from "../interfaces/IChat";
-import { ChatFromDto } from "../mappers/chatMapper";
+import { FromChatResponse } from "../mappers/chatMapper";
 import { IChatResponse } from "../interfaces/IChatResponse";
 
 
@@ -15,7 +15,7 @@ export const chatApi: IChatApi = {
     try {
       const response= await axiosInstance.post(BASE_URL, chat);
       const chatDto = response.data;
-      const Createdchat=ChatFromDto(chatDto)
+      const Createdchat=FromChatResponse(chatDto)
 
       return { success: true,data:Createdchat};
     } catch (error) {
@@ -28,7 +28,7 @@ export const chatApi: IChatApi = {
       const response = await axiosInstance.get<IChatResponse[]>(BASE_URL);
       const chatsDto = response.data;
       const chats: IChat[] = chatsDto.map((chatDto) =>
-        ChatFromDto(chatDto)
+        FromChatResponse(chatDto)
       );
 
       return { success: true, data: chats };
@@ -41,7 +41,7 @@ export const chatApi: IChatApi = {
     try {
       const response = await axiosInstance.get<IChatResponse>(`${BASE_URL}/${id}`);
       const chatDto = response.data;
-      const chat=ChatFromDto(chatDto)
+      const chat=FromChatResponse(chatDto)
       return { success: true, data: chat };
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;

@@ -1,7 +1,7 @@
 import { IProductResponse } from "../interfaces/IProductResponse";
 import { IProduct } from "../interfaces/IProduct";
 
-export const FromDto = (productDto: IProductResponse):IProduct=> {
+export const FromProductResponse = (productDto: IProductResponse):IProduct=> {
   let product: IProduct;
   product = {
     ID:productDto.ID,

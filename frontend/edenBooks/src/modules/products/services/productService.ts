@@ -2,14 +2,14 @@ import { productApi } from "../api/productApi";
 import { IProduct } from "../interfaces/IProduct";
 import { IProductRequest } from "../interfaces/IProductResquest";
 import { IProductService } from "../interfaces/IProductService";
-import { FromDto } from "../mappers/productMapper";
+import { FromProductResponse } from "../mappers/productMapper";
 
 export const productService: IProductService = {
   GetProducts: async (): Promise<IProduct[]> => {
     try {
       const productsDto = await productApi.GetProducts();
       const products: IProduct[] = productsDto.map((productDto) =>
-        FromDto(productDto)
+        FromProductResponse(productDto)
       );
       return products;
     } catch (error) {
@@ -21,7 +21,7 @@ export const productService: IProductService = {
     try {
       const productsDto = await productApi.GetFavorites();
       const products: IProduct[] = productsDto.map((productDto) =>
-        FromDto(productDto)
+        FromProductResponse(productDto)
       );
       return products;
     } catch (error) {
@@ -32,7 +32,7 @@ export const productService: IProductService = {
   GetProductById: async (id: number): Promise<IProduct> => {
     try {
       const productDto = await productApi.GetProductById(id);
-      const product = FromDto(productDto);
+      const product = FromProductResponse(productDto);
       return product;
     } catch (error) {
       console.log("Error al obtener un producto");

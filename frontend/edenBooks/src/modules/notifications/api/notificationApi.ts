@@ -2,7 +2,7 @@ import  { AxiosError } from "axios";
 import { ApiResponse } from "../../../interfaces/apiResponse";
 import { INotificationApi } from "../interfaces/INotificationApi";
 import { INotification } from "../interfaces/INotification";
-import { NotificationFromDto } from "../mappers/notificationMapper";
+import { FromNotificationResponse } from "../mappers/notificationMapper";
 import { INotificationResponse } from "../interfaces/INotificationResponse";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { INotificationRequest } from "../interfaces/INotificationRequest";
@@ -14,7 +14,7 @@ export const notificationApi: INotificationApi = {
     try {
       const response= await axiosInstance.post(BASE_URL, notification);
       const notificationDto = response.data;
-      const createdNotifications: INotification = NotificationFromDto(notificationDto);
+      const createdNotifications: INotification = FromNotificationResponse(notificationDto);
 
       return { success: true,data:createdNotifications};
     } catch (error) {
@@ -27,7 +27,7 @@ export const notificationApi: INotificationApi = {
       const response = await axiosInstance.get<INotificationResponse[]>(BASE_URL);
       const notificationsDto = response.data;
       const notifications: INotification[] = notificationsDto.map((notificationDto) =>
-        NotificationFromDto(notificationDto)
+        FromNotificationResponse(notificationDto)
       );
 
       return { success: true, data: notifications };
@@ -41,7 +41,7 @@ export const notificationApi: INotificationApi = {
       const response = await axiosInstance.get<INotificationResponse>(`${BASE_URL}/${id}`);
       const notificationDto = response.data;
 
-      const notification: INotification = NotificationFromDto(notificationDto);
+      const notification: INotification = FromNotificationResponse(notificationDto);
 
       return { success: true, data: notification };
     } catch (error) {

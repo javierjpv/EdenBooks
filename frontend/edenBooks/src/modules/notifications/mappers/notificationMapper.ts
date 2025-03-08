@@ -5,7 +5,7 @@ import { INotificationResponse } from "../interfaces/INotificationResponse";
 
 
 
-export const NotificationFromDto=(notificationDto:INotificationResponse):INotification=>{
+export const FromNotificationResponse=(notificationDto:INotificationResponse):INotification=>{
 const notification:INotification={
     ID:notificationDto.ID,
     Content:notificationDto.Content,

@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { ApiResponse } from "../../../interfaces/apiResponse";
 import { IMessageApi } from "../interfaces/IMessageApi";
 import { IMessage } from "../interfaces/IMessage";
-import { MessageFromDto} from "../mappers/messageMapper";
+import { FromMessageResponse} from "../mappers/messageMapper";
 import { IMessageResponse } from "../interfaces/IMessageResponse";
 import { IMessageRequest } from "../interfaces/IMessageRequest";
 
@@ -13,7 +13,7 @@ export const messageApi: IMessageApi = {
     try {
       const response= await axios.post(BASE_URL, message);
       const messageDto = response.data;
-      const createdMessages: IMessage = MessageFromDto(messageDto);
+      const createdMessages: IMessage = FromMessageResponse(messageDto);
 
       return { success: true,data:createdMessages};
     } catch (error) {
@@ -26,7 +26,7 @@ export const messageApi: IMessageApi = {
       const response = await axios.get<IMessageResponse[]>(BASE_URL);
       const messagesDto = response.data;
       const messages: IMessage[] = messagesDto.map((messageDto) =>
-        MessageFromDto(messageDto)
+        FromMessageResponse(messageDto)
       );
 
       return { success: true, data: messages };
@@ -40,7 +40,7 @@ export const messageApi: IMessageApi = {
       const response = await axios.get<IMessageResponse>(`${BASE_URL}/${id}`);
       const messageDto = response.data;
 
-      const message: IMessage = MessageFromDto(messageDto);
+      const message: IMessage = FromMessageResponse(messageDto);
 
       return { success: true, data: message };
     } catch (error) {
