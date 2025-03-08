@@ -3,54 +3,54 @@ package usecases
 import (
 	"fmt"
 
-	"github.com/javierjpv/edenBooks/internal/modules/messages/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/messages/application/dto"
+	"github.com/javierjpv/edenBooks/internal/modules/messages/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/messages/domain/services"
 )
 
 var (
-    ErrMissingFields = fmt.Errorf("all fields are required")
-    ErrInvalid     = fmt.Errorf("invalid ID")
+	ErrMissingFields = fmt.Errorf("all fields are required")
+	ErrInvalid       = fmt.Errorf("invalid ID")
 )
+
 type MessageUseCase struct {
 	service services.MessageService
 }
 
-
-func NewMessageUseCase(service services.MessageService)*MessageUseCase{
+func NewMessageUseCase(service services.MessageService) *MessageUseCase {
 	return &MessageUseCase{service: service}
 }
 
-func (u *MessageUseCase)CreateMessage(m dto.MessageDTO)(*entities.Message,error){
-	if m.Content == ""||m.Status=="" {
-		return nil,ErrMissingFields
+func (u *MessageUseCase) CreateMessage(m dto.MessageRequest) (*entities.Message, error) {
+	if m.Content == "" || m.Status == "" {
+		return nil, ErrMissingFields
 	}
-	if m.ChatID==0 || m.ReceiverID==0||m.SenderID==0{
-		return nil,ErrInvalid
+	if m.ChatID == 0 || m.ReceiverID == 0 || m.SenderID == 0 {
+		return nil, ErrInvalid
 	}
 	return u.service.CreateMessage(m)
 }
 
-func (u *MessageUseCase)UpdateMessage(id uint,m dto.MessageDTO)error{
-	if m.Content == ""||m.Status=="" {
+func (u *MessageUseCase) UpdateMessage(id uint, m dto.MessageRequest) error {
+	if m.Content == "" || m.Status == "" {
 		return ErrMissingFields
 	}
-	if m.ChatID==0 || m.ReceiverID==0||m.SenderID==0{
+	if m.ChatID == 0 || m.ReceiverID == 0 || m.SenderID == 0 {
 		return ErrInvalid
 	}
-	return u.service.UpdateMessage(id,m)
+	return u.service.UpdateMessage(id, m)
 }
 
-func (u *MessageUseCase)DeleteMessage(id uint)error{
-	if  id==0  {
+func (u *MessageUseCase) DeleteMessage(id uint) error {
+	if id == 0 {
 		return ErrInvalid
 	}
 	return u.service.DeleteMessage(id)
 }
 
-func (u *MessageUseCase)GetMessageByID(id uint)(*entities.Message,error){
-	if  id==0  {
-		return nil,ErrInvalid
+func (u *MessageUseCase) GetMessageByID(id uint) (*entities.Message, error) {
+	if id == 0 {
+		return nil, ErrInvalid
 	}
 	return u.service.GetMessageByID(id)
 }

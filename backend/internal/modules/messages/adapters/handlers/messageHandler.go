@@ -9,72 +9,68 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type MessageHandler struct{
+type MessageHandler struct {
 	useCase usecases.MessageUseCase
 }
 
-func NewMessageHandler(useCase usecases.MessageUseCase)*MessageHandler{
+func NewMessageHandler(useCase usecases.MessageUseCase) *MessageHandler {
 	return &MessageHandler{useCase: useCase}
 }
 
-func (h *MessageHandler)CreateMessage(c echo.Context)error{
-	var message dto.MessageDTO
-	
-	if err:=c.Bind(&message);err!=nil{
+func (h *MessageHandler) CreateMessage(c echo.Context) error {
+	var message dto.MessageRequest
+
+	if err := c.Bind(&message); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "error al recoger los datos"})
 	}
 
-	
-	if _,err:=h.useCase.CreateMessage(message);err!=nil {
+	if _, err := h.useCase.CreateMessage(message); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Error al crear la transaccion"})
 	}
-	return c.JSON(http.StatusCreated,map[string]string{"message": "transaccion creada correctamente"})
+	return c.JSON(http.StatusCreated, map[string]string{"message": "transaccion creada correctamente"})
 }
 
-func (h *MessageHandler)UpdateMessage(c echo.Context)error{
-	var message dto.MessageDTO
-	messageID:=c.Param("id")
-    id, err := strconv.Atoi(messageID)
-    if err != nil {
-        return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
-    }
-	if err:=c.Bind(&message);err!=nil{
+func (h *MessageHandler) UpdateMessage(c echo.Context) error {
+	var message dto.MessageRequest
+	messageID := c.Param("id")
+	id, err := strconv.Atoi(messageID)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
+	}
+	if err := c.Bind(&message); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "error al recoger los datos"})
 	}
 
-	
-	if err:=h.useCase.UpdateMessage(uint(id),message);err!=nil {
+	if err := h.useCase.UpdateMessage(uint(id), message); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Error al actualizar la transaccion"})
 	}
-	return c.JSON(http.StatusOK,map[string]string{"message": "transaccion actualizada correctamente"})
+	return c.JSON(http.StatusOK, map[string]string{"message": "transaccion actualizada correctamente"})
 	// return c.NoContent(http.StatusNoContent) convencion rest, aunque si quieres enviar un mensaje esta bien
 
 }
 
+func (h *MessageHandler) DeleteMessage(c echo.Context) error {
+	messageID := c.Param("id")
+	id, err := strconv.Atoi(messageID)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
+	}
 
-func (h *MessageHandler)DeleteMessage(c echo.Context)error{
-	messageID:=c.Param("id")
-    id, err := strconv.Atoi(messageID)
-    if err != nil {
-        return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
-    }
-	
-	if err:=h.useCase.DeleteMessage(uint(id));err!=nil {
+	if err := h.useCase.DeleteMessage(uint(id)); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Error al borrar la transaccion"})
 	}
-	return c.JSON(http.StatusOK,map[string]string{"message": "transaccion borrada correctamente"})
+	return c.JSON(http.StatusOK, map[string]string{"message": "transaccion borrada correctamente"})
 	// return c.NoContent(http.StatusNoContent) convencion rest, aunque si quieres enviar un mensaje esta bien
 }
 
-
-func (h *MessageHandler)GetMessageByID(c echo.Context)error{
-	messageID:=c.Param("id")
-    id, err := strconv.Atoi(messageID)
-    if err != nil {
-        return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
-    }
-	message,err:=h.useCase.GetMessageByID(uint(id));
-	if err!=nil {
+func (h *MessageHandler) GetMessageByID(c echo.Context) error {
+	messageID := c.Param("id")
+	id, err := strconv.Atoi(messageID)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
+	}
+	message, err := h.useCase.GetMessageByID(uint(id))
+	if err != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Error al obtener la transaccion"})
 	}
 	return c.JSON(http.StatusOK, message)

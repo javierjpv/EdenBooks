@@ -70,7 +70,6 @@ type Client struct {
 	send chan []byte
 
 	userID uint
-
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -96,15 +95,14 @@ func (c *Client) ReadPump(messageUsecase *messageUsecase.MessageUseCase) {
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 
-		var messageDto dto.MessageDTO
+		var messageDto dto.MessageRequest
 		err = json.Unmarshal(message, &messageDto)
 		if err != nil {
 			log.Printf("Error al deserializar el mensaje: %v", err)
 			continue
 		}
-        messageUsecase.CreateMessage(messageDto)
+		messageUsecase.CreateMessage(messageDto)
 
-		
 		c.hub.broadcast <- message
 	}
 }
@@ -156,25 +154,25 @@ func (c *Client) WritePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request,messageUseCase *messageUsecase.MessageUseCase) {
+func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, messageUseCase *messageUsecase.MessageUseCase) {
 	//leer el token aqui antes de actualizar r
-    // Obtener el token del query parameter
-    tokenString := r.URL.Query().Get("token")
-    if tokenString == "" {
-        // Si no está en los query parameters, intentar obtenerlo del header
-        authHeader := r.Header.Get("Authorization")
-        if authHeader != "" && strings.HasPrefix(authHeader, "Bearer ") {
-            tokenString = strings.TrimPrefix(authHeader, "Bearer ")
-        }
-    }
-    
-    // Validar el token y obtener el ID del usuario
-    userID, err := ExtractUserIDFromToken(tokenString)
-    if err != nil {
-        log.Printf("Error al validar el token: %v", err)
-        http.Error(w, "Unauthorized", http.StatusUnauthorized)
-        return
-    }
+	// Obtener el token del query parameter
+	tokenString := r.URL.Query().Get("token")
+	if tokenString == "" {
+		// Si no está en los query parameters, intentar obtenerlo del header
+		authHeader := r.Header.Get("Authorization")
+		if authHeader != "" && strings.HasPrefix(authHeader, "Bearer ") {
+			tokenString = strings.TrimPrefix(authHeader, "Bearer ")
+		}
+	}
+
+	// Validar el token y obtener el ID del usuario
+	userID, err := ExtractUserIDFromToken(tokenString)
+	if err != nil {
+		log.Printf("Error al validar el token: %v", err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
 	conn, err := Upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -182,7 +180,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request,messageUseCase *me
 		return
 	}
 	// client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256),userID: userID}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID: userID}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
@@ -192,41 +190,41 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request,messageUseCase *me
 }
 
 func ExtractUserIDFromToken(tokenString string) (uint, error) {
-    // Usar la misma clave secreta que se usa para firmar
-    var secretKey = []byte("supersecret")
-    
-    // Parsear el token
-    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-        // Verificar que el método de firma sea el correcto
-        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-            return nil, fmt.Errorf("método de firma inesperado: %v", token.Header["alg"])
-        }
-        return secretKey, nil
-    })
-    
-    if err != nil {
-        return 0, fmt.Errorf("error al validar el token: %v", err)
-    }
-    
-    // Verificar que el token sea válido
-    if !token.Valid {
-        return 0, errors.New("token inválido")
-    }
-    
-    // Extraer los claims (información) del token
-    claims, ok := token.Claims.(jwt.MapClaims)
-    if !ok {
-        return 0, errors.New("no se pudieron extraer los claims del token")
-    }
-    
-    // Extraer el ID del usuario
-    userIDFloat, ok := claims["ID"].(float64)
-    if !ok {
-        return 0, errors.New("ID de usuario no encontrado en el token")
-    }
-    
-    // Convertir a uint
-    userID := uint(userIDFloat)
-    
-    return userID, nil
+	// Usar la misma clave secreta que se usa para firmar
+	var secretKey = []byte("supersecret")
+
+	// Parsear el token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Verificar que el método de firma sea el correcto
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("método de firma inesperado: %v", token.Header["alg"])
+		}
+		return secretKey, nil
+	})
+
+	if err != nil {
+		return 0, fmt.Errorf("error al validar el token: %v", err)
+	}
+
+	// Verificar que el token sea válido
+	if !token.Valid {
+		return 0, errors.New("token inválido")
+	}
+
+	// Extraer los claims (información) del token
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0, errors.New("no se pudieron extraer los claims del token")
+	}
+
+	// Extraer el ID del usuario
+	userIDFloat, ok := claims["ID"].(float64)
+	if !ok {
+		return 0, errors.New("ID de usuario no encontrado en el token")
+	}
+
+	// Convertir a uint
+	userID := uint(userIDFloat)
+
+	return userID, nil
 }
