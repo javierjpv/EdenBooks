@@ -1,8 +1,8 @@
 package dto
 
-type ChatDTO struct{
+type ChatRequest struct {
 }
 
-func NewChat()*ChatDTO{
-	return &ChatDTO{}
+func NewChatRequest() *ChatRequest {
+	return &ChatRequest{}
 }
