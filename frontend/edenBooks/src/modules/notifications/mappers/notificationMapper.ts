@@ -1,11 +1,11 @@
 import { INotification } from "../interfaces/INotification";
-import { INotificationDto } from "../interfaces/INotificationDto";
+import { INotificationResponse } from "../interfaces/INotificationResponse";
 
 
 
 
 
-export const NotificationFromDto=(notificationDto:INotificationDto):INotification=>{
+export const NotificationFromDto=(notificationDto:INotificationResponse):INotification=>{
 const notification:INotification={
     ID:notificationDto.ID,
     Content:notificationDto.Content,

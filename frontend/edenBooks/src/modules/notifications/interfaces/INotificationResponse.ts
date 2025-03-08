@@ -1,4 +1,4 @@
-export interface INotificationDto {
+export interface INotificationResponse {
     ID: number;
     CreatedAt: string;
     UpdatedAt: string;

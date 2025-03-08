@@ -3,7 +3,7 @@ import { ApiResponse } from "../../../interfaces/apiResponse";
 import { INotificationApi } from "../interfaces/INotificationApi";
 import { INotification } from "../interfaces/INotification";
 import { NotificationFromDto } from "../mappers/notificationMapper";
-import { INotificationDto } from "../interfaces/INotificationDto";
+import { INotificationResponse } from "../interfaces/INotificationResponse";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { INotificationRequest } from "../interfaces/INotificationRequest";
 
@@ -24,7 +24,7 @@ export const notificationApi: INotificationApi = {
   },
   GetNotifications: async (): Promise<ApiResponse<INotification[]>> => {
     try {
-      const response = await axiosInstance.get<INotificationDto[]>(BASE_URL);
+      const response = await axiosInstance.get<INotificationResponse[]>(BASE_URL);
       const notificationsDto = response.data;
       const notifications: INotification[] = notificationsDto.map((notificationDto) =>
         NotificationFromDto(notificationDto)
@@ -38,7 +38,7 @@ export const notificationApi: INotificationApi = {
   },
   GetNotificationById: async (id): Promise<ApiResponse<INotification>> => {
     try {
-      const response = await axiosInstance.get<INotificationDto>(`${BASE_URL}/${id}`);
+      const response = await axiosInstance.get<INotificationResponse>(`${BASE_URL}/${id}`);
       const notificationDto = response.data;
 
       const notification: INotification = NotificationFromDto(notificationDto);
