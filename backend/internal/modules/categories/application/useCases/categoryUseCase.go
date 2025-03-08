@@ -9,49 +9,51 @@ import (
 )
 
 var (
-    ErrMissingFields = fmt.Errorf("all fields are required")
-    ErrInvalid     = fmt.Errorf("invalid ID")
+	ErrMissingFields = fmt.Errorf("all fields are required")
+	ErrInvalid       = fmt.Errorf("invalid ID")
 )
-type CategoryUseCase struct{
+
+type CategoryUseCase struct {
 	service services.CategoryService
 }
 
-func NewCategoryUseCase(service services.CategoryService)*CategoryUseCase{
+func NewCategoryUseCase(service services.CategoryService) *CategoryUseCase {
 	return &CategoryUseCase{service: service}
 }
 
-func (u *CategoryUseCase)CreateCategory(category dto.CategoryDTO)error{
-	if category.Name =="" || category.Description =="" {
+func (u *CategoryUseCase) CreateCategory(category dto.CategoryRequest) error {
+	if category.Name == "" || category.Description == "" {
 		return ErrMissingFields
 	}
 	return u.service.CreateCategory(category)
 }
 
-func (u *CategoryUseCase)UpdateCategory(id uint, c dto.CategoryDTO)error{
-	if id==0 {
+func (u *CategoryUseCase) UpdateCategory(id uint, c dto.CategoryRequest) error {
+	if id == 0 {
 		return ErrInvalid
 	}
-	if c.Name =="" || c.Description =="" {
+	if c.Name == "" || c.Description == "" {
 		return ErrMissingFields
 	}
-	return u.service.UpdateCategory(id,c)
+	return u.service.UpdateCategory(id, c)
 }
 
-func (u *CategoryUseCase)DeleteCategory(id uint)error{
-	if id==0 {
+func (u *CategoryUseCase) DeleteCategory(id uint) error {
+	if id == 0 {
 		return ErrInvalid
 	}
 	return u.service.DeleteCategory(id)
 }
 
-func (u *CategoryUseCase)GetCategoryByID(id uint)(*entities.Category,error){
-	if id==0 {
-		return nil,ErrInvalid
+func (u *CategoryUseCase) GetCategoryByID(id uint) (*entities.Category, error) {
+	if id == 0 {
+		return nil, ErrInvalid
 	}
 	return u.service.GetCategoryByID(id)
 }
 
-func (u *CategoryUseCase)GetAllCategories()([]entities.Category,error){
+func (u *CategoryUseCase) GetAllCategories() ([]entities.Category, error) {
 	return u.service.GetAllCategories()
 }
+
 // GetAllCategories()([]entities.Category)
