@@ -72,12 +72,24 @@ func (h *ProductHandler)DeleteProduct(c echo.Context)error{
 
 
 func (h *ProductHandler)GetProductByID(c echo.Context)error{
+	authHeader := c.Request().Header.Get("Authorization")
+	if authHeader == "" {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Token no proporcionado"})
+	}
+	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+	userID, err := auth.ExtractUserIDFromToken(tokenString)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Token inválido: " + err.Error()})
+	}
+
+	fmt.Println("user_id",userID);
+
 	productID:=c.Param("id")
     id, err := strconv.Atoi(productID)
     if err != nil {
         return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
     }
-	product,err:=h.useCase.GetProductByID(uint(id));
+	product,err:=h.useCase.GetProductByID(uint(id),userID);
 	if err!=nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Error al obtener el producto"})
 	}

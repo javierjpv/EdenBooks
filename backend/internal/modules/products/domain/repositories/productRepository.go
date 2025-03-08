@@ -8,6 +8,7 @@ type ProductRepository interface{
 	UpdateProduct(product *entities.Product)error
 	DeleteProduct(id uint)error
 	GetProductByID(id uint)(*entities.Product,error)
+	GetProductByIDWithFavorite(id uint, userID uint) (*entities.ProductWithFavoriteStatus, error)
 	AddToFavorites(userID uint,productID uint)error
 	RemoveFromFavorites(userID uint, productID uint) error
 	GetFavorites(userID uint) ([]entities.Product, error)

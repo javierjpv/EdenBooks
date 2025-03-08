@@ -51,6 +51,31 @@ func (r *ProductRepository) GetProductByID(id uint) (*entities.Product, error) {
 	}
 	return &product, nil
 }
+func (r *ProductRepository) GetProductByIDWithFavorite(id uint, userID uint) (*entities.ProductWithFavoriteStatus, error) {
+	var product entities.Product
+	err := r.db.First(&product, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) { 
+			return nil, fmt.Errorf("product with ID %d not found", id) 
+		}
+		return nil, fmt.Errorf("error fetching product: %w", err)
+	}
+
+	// Verificar si el producto está en la lista de favoritos del usuario
+	var count int64
+	err = r.db.Table("user_favourites").
+		Where("user_id = ? AND product_id = ?", userID, id).
+		Count(&count).Error
+	if err != nil {
+		return nil, fmt.Errorf("error checking favorite status: %w", err)
+	}
+
+	// Retornar el producto con el estado de favorito
+	return &entities.ProductWithFavoriteStatus{
+		Product:   product,
+		IsFavorite: count > 0, // Si count > 0, es favorito
+	}, nil
+}
 func (r *ProductRepository) AddToFavorites(userID uint, productID uint) error {
 	product := &entities.Product{}
 

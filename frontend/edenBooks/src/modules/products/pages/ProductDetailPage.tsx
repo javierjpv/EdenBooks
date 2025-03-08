@@ -6,10 +6,8 @@ import { Box, Button, Container, Skeleton } from "@mui/material";
 import { ProductDetail } from "../components/ProductDetail";
 import { ReviewList } from "../../reviews/components/ReviewList";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
-import { chatService } from "../../chats/services/chatService";
 import { useDispatch } from "react-redux";
 import { updateProduct } from "../../../Store/checkout/checkoutSlice";
-import { SellerDetails } from "../components/SellerDetails";
 export const ProductDetailPage = () => {
   const { user } = useAuthStore();
   const { id } = useParams();

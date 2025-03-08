@@ -82,6 +82,9 @@ func(s * ProductService)DeleteProduct(id uint)error{
 func(s * ProductService)GetProductByID(id uint)(*entities.Product,error){
 	return s.repo.GetProductByID(id)
 }
+func(s * ProductService)GetProductByIDWithFavorite(id uint, userID uint) (*entities.ProductWithFavoriteStatus, error){
+	return s.repo.GetProductByIDWithFavorite(id,userID)
+}
 func(s * ProductService)AddToFavorites(userID uint, productID uint)error{
 	if _,err:= s.repo.GetProductByID(productID);err!=nil{
 		return err

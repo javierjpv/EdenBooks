@@ -33,6 +33,7 @@ import { chatService } from "../../chats/services/chatService";
 export const ProductDetail = ({ product }: { product: IProduct | null }) => {
   const { user } = useAuthStore();
   const [loadingDelete, setloadingDelete] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(product?.is_favorite ?? false);
   const navigate = useNavigate();
   const handleDelete = async (id: number): Promise<void> => {
     try {
@@ -48,6 +49,7 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
       console.log("Error al eliminar un producto", error);
     }
   };
+
   const handleEdit = (): void => {
     if (product?.ID) {
       navigate(`/products/edit/${product.ID}`);
@@ -55,6 +57,7 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
       console.log("No se ha accedido correctamente a la edicion");
     }
   };
+
   const handleGoBack = () => {
     navigate(-1); // Esto te lleva a la página anterior
   };
@@ -78,6 +81,7 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
     console.log("RESPONSE", response);
     return response.data.ID;
   };
+
   const handleChat = async (): Promise<void> => {
     if (!product) {
       console.log("Error en handleChat");
@@ -89,17 +93,22 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
     }
   };
 
+
   const handleFavorite = async () => {
-    if (product && product.ID) {
-      console.log("añadido a favoritos");
-      try {
+    if (!product || !product.ID) {
+      console.log("El producto no existe");
+      return;
+    }
+    try {
+      if (isFavorite) {
+        await productService.DeleteFromFavorite(product.ID);
+        setIsFavorite(false);
+      } else {
         await productService.AddToFavorite(product.ID);
-      } catch (error) {
-        console.log("error al añadir a favorito");
-      } finally {
+        setIsFavorite(true);
       }
-    } else {
-      console.log("no existe aun el product");
+    } catch (error) {
+      console.log("Error al actualizar favorito", error);
     }
   };
 
@@ -170,12 +179,15 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
 
                       <Box>
                         {!product.Sold && (
-                          <IconButton
-                            onClick={handleFavorite}
-                            aria-label="add to favorites"
-                          >
-                            <Favorite />
-                          </IconButton>
+                          <>
+                              <IconButton
+                                color={isFavorite?"error":"default"}
+                                onClick={handleFavorite}
+                                aria-label="add to favorites"
+                              >
+                                <Favorite />
+                              </IconButton>
+                          </>
                         )}
                         <Button
                           onClick={handleChat}

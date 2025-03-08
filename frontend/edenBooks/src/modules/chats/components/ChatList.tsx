@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { chatService } from "../services/chatService"
 import { IChatDto } from "../interfaces/IChatDto"
 import { ChatItem } from "./ChatItem"
-import { Box, CircularProgress, List, Typography } from "@mui/material"
+import { Box, List, Skeleton, Typography } from "@mui/material"
 
 export const ChatList = () => {
     const [loading, setloading] = useState<boolean>(true)
@@ -34,9 +34,17 @@ useEffect(() => {
       </Typography>
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-          <CircularProgress />
-        </Box>
+        <List>
+          {[...Array(9)].map((_, index) => (
+            <Box key={index} display="flex" alignItems="center" p={1}>
+              <Skeleton variant="circular" width={40} height={40} />
+              <Box ml={2} width="100%">
+                <Skeleton variant="text" width="80%" height={20} />
+                <Skeleton variant="text" width="60%" height={15} />
+              </Box>
+            </Box>
+          ))}
+        </List>
       ) : chats.length > 0 ? (
         <List>
           {chats.map((chat) => (

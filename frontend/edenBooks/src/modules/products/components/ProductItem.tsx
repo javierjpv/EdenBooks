@@ -19,6 +19,7 @@ import { useAuthStore } from "../../users/hooks/useAuthStore";
 export const ProductItem = ({ product }: { product: IProduct }) => {
   const { user } = useAuthStore();
   const [loadingDelete, setloadingDelete] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(product.is_favorite);
   const navigate = useNavigate();
 
   const handleEdit = (): void => {
@@ -40,6 +41,23 @@ export const ProductItem = ({ product }: { product: IProduct }) => {
     } catch (error) {
       setloadingDelete(false);
       console.log("Error al eliminar un producto", error);
+    }
+  };
+  const handleFavorite = async () => {
+    if (!product || !product.ID) {
+      console.log("El producto no existe");
+      return;
+    }
+    try {
+      if (isFavorite) {
+        await productService.DeleteFromFavorite(product.ID);
+        setIsFavorite(false);
+      } else {
+        await productService.AddToFavorite(product.ID);
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.log("Error al actualizar favorito", error);
     }
   };
 
@@ -119,16 +137,17 @@ export const ProductItem = ({ product }: { product: IProduct }) => {
             <>
               {!product.Sold && (
                 <>
-                  {product.is_favorite && (
-                    <IconButton color="error" aria-label="add to favorites">
-                      <Favorite />
-                    </IconButton>
-                  )}
-                  {!product.is_favorite && (
-                    <IconButton aria-label="add to favorites">
-                      <Favorite />
-                    </IconButton>
-                  )}
+                        {!product.Sold && (
+                          <>
+                              <IconButton
+                                color={isFavorite?"error":"default"}
+                                onClick={handleFavorite}
+                                aria-label="add to favorites"
+                              >
+                                <Favorite />
+                              </IconButton>
+                          </>
+                        )}
                 </>
               )}
             </>

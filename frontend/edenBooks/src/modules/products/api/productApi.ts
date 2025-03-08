@@ -17,7 +17,7 @@ export const productApi: IProductApi = {
     return response.data;
   },
   GetProductById: async (id: number): Promise<IProductDto> => {
-    const response = await axios.get<IProductDto>(`${BASE_URL}/${id}`);
+    const response = await axiosInstance.get<IProductDto>(`${BASE_URL}/${id}`);
     return response.data;
   },
   CreateProduct: async (product: IProduct): Promise<void> => {

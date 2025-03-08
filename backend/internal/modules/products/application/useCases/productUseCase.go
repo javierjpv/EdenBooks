@@ -54,11 +54,18 @@ func (u *ProductUseCase)DeleteProduct(id uint)error{
 	return u.service.DeleteProduct(id)
 }
 
-func (u *ProductUseCase)GetProductByID(id uint)(*entities.Product,error){
+// func (u *ProductUseCase)GetProductByID(id uint)(*entities.Product,error){
+// 	if  id==0  {
+// 		return nil,ErrInvalid
+// 	}
+// 	return u.service.GetProductByID(id)
+// }
+
+func (u *ProductUseCase)GetProductByID(id uint,userID uint)(*entities.ProductWithFavoriteStatus, error){
 	if  id==0  {
 		return nil,ErrInvalid
 	}
-	return u.service.GetProductByID(id)
+	return u.service.GetProductByIDWithFavorite(id,userID)
 }
 func (u *ProductUseCase)AddToFavorites(userID uint,productID uint)error{
 	if  userID==0  {
