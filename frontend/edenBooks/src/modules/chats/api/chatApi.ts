@@ -5,6 +5,7 @@ import { IChatRequest } from "../interfaces/IChatRequest";
 import { axiosInstance } from "../../../api/axiosInstance";
 import { IChat } from "../interfaces/IChat";
 import { ChatFromDto } from "../mappers/chatMapper";
+import { IChatDto } from "../interfaces/IChatDto";
 
 
 const BASE_URL = "/chats";
@@ -24,7 +25,7 @@ export const chatApi: IChatApi = {
   },
   GetChats: async (): Promise<ApiResponse<IChat[]>> => {
     try {
-      const response = await axiosInstance.get<IChat[]>(BASE_URL);
+      const response = await axiosInstance.get<IChatDto[]>(BASE_URL);
       const chatsDto = response.data;
       const chats: IChat[] = chatsDto.map((chatDto) =>
         ChatFromDto(chatDto)
@@ -38,7 +39,7 @@ export const chatApi: IChatApi = {
   },
   GetChatById: async (id): Promise<ApiResponse<IChat>> => {
     try {
-      const response = await axiosInstance.get<IChat>(`${BASE_URL}/${id}`);
+      const response = await axiosInstance.get<IChatDto>(`${BASE_URL}/${id}`);
       const chatDto = response.data;
       const chat=ChatFromDto(chatDto)
       return { success: true, data: chat };
