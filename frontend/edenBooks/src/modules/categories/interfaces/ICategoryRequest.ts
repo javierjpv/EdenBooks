@@ -1,5 +1,4 @@
-export interface ICategory{
-    ID:number
+export interface ICategoryRequest{
     Name:string         
 	Description:string
 }

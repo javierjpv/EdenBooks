@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ICategoryApi } from "../interfaces/ICategoryApi";
 import { ICategoryDto } from "../interfaces/ICategoryDto";
-import { ICategory } from "../interfaces/ICategory";
+import { ICategoryRequest } from "../interfaces/ICategoryRequest";
 const BASE_URL = "http://localhost:6969/categories";
   
 
@@ -10,14 +10,14 @@ const BASE_URL = "http://localhost:6969/categories";
         const response=await axios.get<ICategoryDto[]>(BASE_URL)
         return response.data
     },
-    CreateCategory:async(category:ICategory):Promise<void>=>{
+    CreateCategory:async(category:ICategoryRequest):Promise<void>=>{
         await axios.post(BASE_URL,category)
     },
     GetCategoryById:async(id: number): Promise<ICategoryDto>=>{
         const response=await axios.get(`${BASE_URL}/${id}`)
         return response.data
     },
-    UpdateCategory:async(id: number, category: ICategory): Promise<void>=>{
+    UpdateCategory:async(id: number, category: ICategoryRequest): Promise<void>=>{
         await axios.put(`${BASE_URL}/${id}`,category)
     }
     ,

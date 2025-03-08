@@ -3,6 +3,7 @@ import { ICategoryService } from "../interfaces/ICategoryService";
 import { FromCategoryDto } from "../mappers/categoryMapper";
 import { ICategory } from "../interfaces/ICategory";
 import { ICategoryDto } from "../interfaces/ICategoryDto";
+import { ICategoryRequest } from "../interfaces/ICategoryRequest";
 export const categoryService: ICategoryService = {
   GetCategories: async (): Promise<ICategory[]> => {
     try {
@@ -16,16 +17,8 @@ export const categoryService: ICategoryService = {
       throw new Error("Error al obtener las categorias");
     }
   },
-  // GetCategoriesDto: async (): Promise<ICategoryDto[]> => {
-  //   try {
-  //     const categoriesDto: ICategoryDto[] = await categoryApi.GetCategories();
-  //     return categoriesDto;
-  //   } catch (error) {
-  //     console.log("Error al obtener las categorias", error);
-  //     throw new Error("Error al obtener las categorias");
-  //   }
-  // },
-  CreateCategory: async (category: ICategory): Promise<void> => {
+
+  CreateCategory: async (category: ICategoryRequest): Promise<void> => {
     try {
       await categoryApi.CreateCategory(category);
     } catch (error) {
@@ -43,7 +36,7 @@ export const categoryService: ICategoryService = {
       throw new Error("Error al obtener categoria por id");
     }
   },
-  UpdateCategory: async (id: number, category: ICategory): Promise<void> => {
+  UpdateCategory: async (id: number, category: ICategoryRequest): Promise<void> => {
     try {
       await categoryApi.UpdateCategory(id, category);
     } catch (error) {
