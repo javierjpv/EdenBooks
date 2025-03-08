@@ -21,7 +21,7 @@ func NewUserUseCase(service services.UserService) *UserUseCase {
 	return &UserUseCase{service: service}
 }
 
-func (u *UserUseCase) Register(user dto.UserDTO) error {
+func (u *UserUseCase) Register(user dto.UserRequest) error {
 
 	if user.Email == "" || user.Password == "" {
 		return ErrMissingFields
@@ -44,6 +44,6 @@ func (u *UserUseCase) GetUserByID(id uint) (*entities.User, error) {
 	return u.service.GetUserByID(id)
 }
 
-func (u *UserUseCase) UpdateUser(id uint, user dto.UserDTO) error {
+func (u *UserUseCase) UpdateUser(id uint, user dto.UserRequest) error {
 	return u.service.UpdateUser(id, user)
 }
