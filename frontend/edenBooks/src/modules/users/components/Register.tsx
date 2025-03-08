@@ -39,7 +39,7 @@ export const Register = () => {
     handleSubmit(e, accionTrasSubmit);
   };
   useEffect(() => {
-    if (user?.Error.trim().length > 0&&submitted) {
+    if (user.Error&&user.Error.length > 0&&submitted) {
       setshowError(true);
       setTimeout(() => {
         setshowError(false);

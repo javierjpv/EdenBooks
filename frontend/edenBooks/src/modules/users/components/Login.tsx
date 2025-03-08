@@ -39,7 +39,7 @@ export const Login = () => {
   };
 
   useEffect(() => {
-    if (user?.Error.length > 0 && submitted) {
+    if (user.Error&&user.Error.length > 0 && submitted) {
       setshowError(true);
       setTimeout(() => {
         setshowError(false);

@@ -2,6 +2,9 @@ import axios, { AxiosError } from "axios";
 import { IUserApi } from "../interfaces/IUserApi";
 import { IUser } from "../interfaces/IUser";
 import { ApiResponse } from "../../../interfaces/apiResponse";
+import { IUserResponse } from "../interfaces/IUserResponse";
+import { IUserRequest } from "../interfaces/IUserRequest";
+import { FromUserResponse } from "../mappers/userMapper";
 const BASE_URL = "http://localhost:6969/users";
 
 export const userApi: IUserApi = {
@@ -9,10 +12,13 @@ export const userApi: IUserApi = {
     email: string,
     password: string
   ): Promise<ApiResponse<IUser>> => {
-    const user: IUser = { Email: email, Password: password };
+    const user: IUserRequest = { Email: email, Password: password };
     try {
-      const response = await axios.post<IUser>(`${BASE_URL}/login`, user);
-      return { data: response.data, success: true };
+      const response = await axios.post(`${BASE_URL}/login`, user);
+      const userResponse:IUserResponse = response.data;
+      //mapper
+      const logegUser=FromUserResponse(userResponse)
+      return { data: logegUser, success: true };
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
       return { success: false, error: axiosError.request?.response };
@@ -22,24 +28,28 @@ export const userApi: IUserApi = {
     email: string,
     password: string
   ): Promise<ApiResponse<IUser>> => {
-    const user: IUser = { Email: email, Password: password };
+    const user: IUserRequest = { Email: email, Password: password };
     try {
-      const response = await axios.post<IUser>(`${BASE_URL}/register`, user);
-      return { data: response.data, success: true };
+      const response = await axios.post(`${BASE_URL}/register`, user);
+      const userResponse:IUserResponse = response.data;
+      //mapper
+      const logegUser=FromUserResponse(userResponse)
+      return { data: logegUser, success: true };
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
       return { success: false, error: axiosError.request?.response };
     }
-  },  GetUserById: async (id): Promise<ApiResponse<IUser>> => {
-      try {
-        const response = await axios.get<IUser>(`${BASE_URL}/${id}`);
-        const user = response.data;
-
-  
-        return { success: true, data: user };
-      } catch (error) {
-        const axiosError = error as AxiosError<{ error: string }>;
-        return { success: false, error: axiosError.request?.response };
-      }
-    },
+  },
+  GetUserById: async (id): Promise<ApiResponse<IUser>> => {
+    try {
+      const response = await axios.get<IUserResponse>(`${BASE_URL}/${id}`);
+      const userResponse:IUserResponse = response.data;
+      //mapper
+      const user=FromUserResponse(userResponse)
+      return { success: true, data: user };
+    } catch (error) {
+      const axiosError = error as AxiosError<{ error: string }>;
+      return { success: false, error: axiosError.request?.response };
+    }
+  },
 };

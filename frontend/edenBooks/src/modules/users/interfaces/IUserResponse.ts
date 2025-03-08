@@ -1,4 +1,4 @@
-export interface IUser{
+export interface IUserResponse{
     Email:string
     Password?:string
     ID?:number
