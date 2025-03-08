@@ -49,7 +49,7 @@ func (h *StripeHandler) CreateCheckoutSession(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
 	}
 
-	order := orderDTO.NewOrderDTO("pagado", req.UserID, uint(1), req.CarrierID, uint(1))
+	order := orderDTO.NewOrderRequest("pagado", req.UserID, uint(1), req.CarrierID, uint(1))
 	productIds := []uint{req.ProductID}
 
 	if err := h.orderUsecase.CheckOrder(*order, productIds); err != nil {

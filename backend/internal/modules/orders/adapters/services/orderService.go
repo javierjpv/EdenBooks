@@ -65,7 +65,7 @@ func NewOrderService(repo repositories.OrderRepository, productService productSe
 // 	return nil
 // }
 
-func (s *OrderService) CheckOrder(o orderDTO.OrderDTO, productsIDs []uint) error {
+func (s *OrderService) CheckOrder(o orderDTO.OrderRequest, productsIDs []uint) error {
 
 	if _, err := s.userService.GetUserByID(o.UserID); err != nil {
 		return err
@@ -92,7 +92,7 @@ func (s *OrderService) CheckOrder(o orderDTO.OrderDTO, productsIDs []uint) error
 	return nil
 }
 
-func (s *OrderService) CreateOrder(o orderDTO.OrderDTO, productsIDs []uint) error {
+func (s *OrderService) CreateOrder(o orderDTO.OrderRequest, productsIDs []uint) error {
 
 	if err := s.CheckOrder(o, productsIDs); err != nil {
 		return err
@@ -109,7 +109,7 @@ func (s *OrderService) CreateOrder(o orderDTO.OrderDTO, productsIDs []uint) erro
 	return nil
 }
 
-func (s *OrderService) UpdateOrder(id uint, o orderDTO.OrderDTO) error {
+func (s *OrderService) UpdateOrder(id uint, o orderDTO.OrderRequest) error {
 	order, err := s.repo.GetOrderByID(id)
 	if err != nil {
 		return err
@@ -192,7 +192,7 @@ func (s *OrderService) ListenPaymentCreated() {
 			return
 		}
 
-		orderDto := orderDTO.NewOrderDTO("pagado", userID, createdAddress.ID, carrierID, transactionID)
+		orderDto := orderDTO.NewOrderRequest("pagado", userID, createdAddress.ID, carrierID, transactionID)
 		productIds := []uint{productID}
 
 		err = s.CreateOrder(*orderDto, productIds)

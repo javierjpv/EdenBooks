@@ -1,12 +1,10 @@
 package handlers
 
 import (
-
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
-
 
 	"github.com/javierjpv/edenBooks/internal/modules/orders/application/dto"
 	usecases "github.com/javierjpv/edenBooks/internal/modules/orders/application/useCases"
@@ -24,8 +22,8 @@ func NewOrderHandler(useCase usecases.OrderUseCase) *OrderHandler {
 
 func (h *OrderHandler) CreateOrder(c echo.Context) error {
 	var req struct {
-		OrderDTO   dto.OrderDTO `json:"order"`
-		ProductIDs []uint       `json:"product_ids"`
+		OrderDTO   dto.OrderRequest `json:"order"`
+		ProductIDs []uint           `json:"product_ids"`
 	}
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "error al recoger los datos"})
@@ -41,7 +39,7 @@ func (h *OrderHandler) CreateOrder(c echo.Context) error {
 }
 
 func (h *OrderHandler) UpdateOrder(c echo.Context) error {
-	var order dto.OrderDTO
+	var order dto.OrderRequest
 	orderID := c.Param("id")
 	id, err := strconv.Atoi(orderID)
 	if err != nil {
@@ -86,16 +84,15 @@ func (h *OrderHandler) GetOrderByID(c echo.Context) error {
 }
 
 func (h *OrderHandler) GetFilteredOrders(c echo.Context) error {
-	fmt.Println("Procesando solicitud...");
+	fmt.Println("Procesando solicitud...")
 	// Obtener el token del encabezado Authorization
 	authHeader := c.Request().Header.Get("Authorization")
 	if authHeader == "" {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Token no proporcionado"})
 	}
 
-
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-	
+
 	userID, err := auth.ExtractUserIDFromToken(tokenString)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Token inválido: " + err.Error()})
@@ -116,4 +113,3 @@ func (h *OrderHandler) GetFilteredOrders(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, orders)
 }
-
