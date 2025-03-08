@@ -1,9 +1,9 @@
 
 import { Card, CardActions, CardContent, Grid2, Skeleton } from "@mui/material";
 import { IProduct } from "../interfaces/IProduct";
-import { ProductItem } from "./ProductItem";
 import { useEffect, useState } from "react";
 import { productService } from "../services/productService";
+import { FavoriteItem } from "./FavoriteItem";
 export const FavoriteList = () => {
   const [products, setproducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,7 +73,7 @@ export const FavoriteList = () => {
         {!loading && !error
           ? products.map((product) => (
               <Grid2  key={product.ID} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                <ProductItem  product={product} />
+                <FavoriteItem  product={product} />
               </Grid2>
             ))
           : ""}

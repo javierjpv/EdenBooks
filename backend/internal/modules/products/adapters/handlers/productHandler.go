@@ -151,22 +151,22 @@ func (h *ProductHandler)GetFavorites(c echo.Context) error{
 	return c.JSON(http.StatusOK, products)
 
 }
-func (h *ProductHandler) GetFilteredProducts(c echo.Context) error {
-	// Extraer todos los filtros dinámicos de la URL
-	filters := make(map[string]string)
-	for key, values := range c.QueryParams() {
-		if len(values) > 0 {
-			filters[key] = values[0]
-		}
-	}
+// func (h *ProductHandler) GetFilteredProducts(c echo.Context) error {
+// 	// Extraer todos los filtros dinámicos de la URL
+// 	filters := make(map[string]string)
+// 	for key, values := range c.QueryParams() {
+// 		if len(values) > 0 {
+// 			filters[key] = values[0]
+// 		}
+// 	}
 
-	products, err := h.useCase.GetFilteredProducts(filters)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
-	}
-	fmt.Println("products get filtered",products);
-	return c.JSON(http.StatusOK, products)
-}
+// 	products, err := h.useCase.GetFilteredProducts(filters)
+// 	if err != nil {
+// 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+// 	}
+// 	fmt.Println("products get filtered");
+// 	return c.JSON(http.StatusOK, products)
+// }
 func (h *ProductHandler) GetProductsWithFavorites(c echo.Context) error {
 	authHeader := c.Request().Header.Get("Authorization")
 	if authHeader == "" {
@@ -191,6 +191,6 @@ func (h *ProductHandler) GetProductsWithFavorites(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-	fmt.Println("products GetProductsWithFavorites",products);
+	fmt.Println("products GetProductsWithFavorites");
 	return c.JSON(http.StatusOK, products)
 }
