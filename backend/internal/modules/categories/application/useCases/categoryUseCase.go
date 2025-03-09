@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/javierjpv/edenBooks/internal/modules/categories/application/dto"
-	"github.com/javierjpv/edenBooks/internal/modules/categories/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/categories/domain/services"
 )
 
@@ -45,15 +44,30 @@ func (u *CategoryUseCase) DeleteCategory(id uint) error {
 	return u.service.DeleteCategory(id)
 }
 
-func (u *CategoryUseCase) GetCategoryByID(id uint) (*entities.Category, error) {
+func (u *CategoryUseCase) GetCategoryByID(id uint) (*dto.CategoryResponse, error) {
 	if id == 0 {
 		return nil, ErrInvalid
 	}
-	return u.service.GetCategoryByID(id)
+	category, err := u.service.GetCategoryByID(id)
+	if err != nil {
+		return nil, err
+	}
+	categoryResponse := dto.NewCategoryResponse(category.ID, category.Name,category.Description)
+	return categoryResponse, nil
 }
+func (u *CategoryUseCase) GetAllCategories() ([]dto.CategoryResponse, error) {
 
-func (u *CategoryUseCase) GetAllCategories() ([]entities.Category, error) {
-	return u.service.GetAllCategories()
+	categories, err := u.service.GetAllCategories()
+	if err != nil {
+		return nil, err
+	}
+
+	// Convertir cada Category a CategoryResponse
+	var categoryResponses []dto.CategoryResponse
+	for _, category := range categories {
+		categoryResponses = append(categoryResponses, *dto.NewCategoryResponse(
+			category.ID,category.Name,category.Description))
+	}
+
+	return categoryResponses, nil
 }
-
-// GetAllCategories()([]entities.Category)
