@@ -33,22 +33,34 @@ EdenBooks es una plataforma diseñada para facilitar la compra y venta de libros
 ### Instalación
 
 1. Clona el repositorio:
-   git clone https://github.com/javierjpv/EdenBooks.git
+```sh
+git clone https://github.com/javierjpv/EdenBooks.git
+```
 
 2. Instala las dependencias del backend:
+```sh
 go mod download
+```
 
 3. Instala las dependencias del frontend:
+```sh
 cd frontend/edenBooks
+```
+```sh
 yarn
+```
 
 ### Ejecución de la Aplicación
 
 1. Inicia el servidor backend:
+```sh
 go run main.go
+```
 
 2. Inicia el servidor de desarrollo del frontend:
+```sh
 yarn dev
+```
 
 3. Abre tu navegador y navega a http://localhost:5173 para acceder a la aplicación.
 
