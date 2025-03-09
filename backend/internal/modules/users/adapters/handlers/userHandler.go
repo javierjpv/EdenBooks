@@ -42,8 +42,8 @@ func (h *UserHandler) Login(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Error al generar el token"})
 	}
-
-	return c.JSON(http.StatusOK, map[string]string{"Token": tokenString, "ID": strconv.FormatUint(uint64(registredUser.ID), 10), "Email": registredUser.Email, "Name": registredUser.Name, "Tel": registredUser.Tel})
+    registredUser.Token=tokenString
+	return c.JSON(http.StatusOK, registredUser)
 }
 
 func (h *UserHandler) Register(c echo.Context) error {
@@ -72,7 +72,8 @@ func (h *UserHandler) Register(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Error al generar el token"})
 	}
-	return c.JSON(http.StatusOK, map[string]string{"Token": tokenString, "Email": registredUser.Email, "Name": registredUser.Name, "ID": strconv.FormatUint(uint64(registredUser.ID), 10)})
+	registredUser.Token=tokenString
+	return c.JSON(http.StatusOK, registredUser)
 }
 
 func (h *UserHandler) GetUserByID(c echo.Context) error {

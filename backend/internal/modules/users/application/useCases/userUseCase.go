@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/javierjpv/edenBooks/internal/modules/users/application/dto"
-	"github.com/javierjpv/edenBooks/internal/modules/users/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/users/domain/services"
 )
 
@@ -29,12 +28,18 @@ func (u *UserUseCase) Register(user dto.UserRequest) error {
 	return u.service.Register(user)
 }
 
-func (u *UserUseCase) Login(email string, password string) (*entities.User, error) {
+func (u *UserUseCase) Login(email string, password string) (*dto.UserResponse, error) {
 
 	if email == "" || password == "" {
 		return nil, ErrInvalid
 	}
-	return u.service.Login(email, password)
+
+	user,err:=u.service.Login(email,password)
+	if err!=nil {
+		return nil,err
+	}
+	userResponse:=dto.UserResponse{ID:user.ID,Email: user.Email,Name: user.Name,Tel: user.Tel}
+	return &userResponse, nil
 
 }
 func (u *UserUseCase) GetUserByID(id uint) (*dto.UserResponse, error) {
