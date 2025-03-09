@@ -1,6 +1,3 @@
-
-### README del Backend (backend/README.md)
-
 # Backend Architecture
 
 El backend de EdenBooks está construido utilizando las siguientes arquitecturas y principios:
@@ -23,10 +20,18 @@ El sistema está diseñado para reaccionar a eventos, lo que permite una comunic
 
 ## Estructura del Proyecto
 
-- **Domain**: Contiene los modelos y lógica del negocio.
-- **Application**: Contiene la lógica de la aplicación, como casos de uso y servicios.
-- **Infrastructure**: Contiene las implementaciones técnicas, como acceso a la base de datos y servicios externos.
-- **Interfaces**: Contiene los adaptadores para la interacción con el mundo exterior, como controladores HTTP y suscripción a eventos.
+- **Domain**: Contiene los modelos y las interfaces de repositorios y servicios.
+  - **entities/**: Define las entidades del dominio.
+  - **repositories/**: Define las interfaces de los repositorios.
+  - **services/**: Define las interfaces de los servicios del dominio.
+- **Application**: Contiene casos de uso y dtos.
+  - **usecases/**: Contiene los casos de uso que implementan la lógica de la aplicación.
+  - **dtos/**: Contiene los objetos de transferencia de datos.
+- **Adapters**: Contiene las implementaciones de las interfaces de la carpeta Domain.
+  - **repositories/**: Implementaciones de las interfaces de repositorios.
+  - **services/**: Implementaciones de las interfaces de servicios.
+  - **handlers/**: Controladores y manejadores de rutas.
+  - **routes/**: Rutas.
 
 Para más detalles sobre la implementación específica, revisa los archivos en el directorio correspondiente.
 
