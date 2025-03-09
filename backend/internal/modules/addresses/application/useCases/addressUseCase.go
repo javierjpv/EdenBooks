@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/javierjpv/edenBooks/internal/modules/addresses/application/dto"
-	"github.com/javierjpv/edenBooks/internal/modules/addresses/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/addresses/domain/services"
 )
 
@@ -21,14 +20,19 @@ func NewAddressUseCase(service services.AddressService) *AddressUseCase {
 	return &AddressUseCase{service: service}
 }
 
-func (u *AddressUseCase) CreateAddress(address dto.AddressRequest) (*entities.Address, error) {
+func (u *AddressUseCase) CreateAddress(address dto.AddressRequest) (*dto.AddressResponse, error) {
 	if address.City == "" || address.Province == "" || address.PostalCode == "" || address.Country == "" || address.Street == "" {
 		return nil, ErrMissingFields
 	}
 	if address.Number <= 0 {
 		return nil, fmt.Errorf("adrees number can not be <= 0")
 	}
-	return u.service.CreateAddress(address)
+	createdAddress, err := u.service.CreateAddress(address)
+	if err != nil {
+		return nil, err
+	}
+	addressResponse := dto.NewAddressResponse(createdAddress.ID, createdAddress.City, createdAddress.Province, createdAddress.PostalCode, createdAddress.Country, createdAddress.Street, createdAddress.Number)
+	return addressResponse, nil
 }
 
 func (u *AddressUseCase) UpdateAddress(id uint, address dto.AddressRequest) error {
@@ -51,13 +55,18 @@ func (u *AddressUseCase) DeleteAddress(id uint) error {
 	return u.service.DeleteAddress(id)
 }
 
-func (u *AddressUseCase) GetAddressByID(id uint) (*entities.Address, error) {
+func (u *AddressUseCase) GetAddressByID(id uint) (*dto.AddressResponse, error) {
 	if id == 0 {
 		return nil, ErrInvalidID
 	}
-	return u.service.GetAddressByID(id)
+	address, err := u.service.GetAddressByID(id)
+	if err != nil {
+		return nil, err
+	}
+	addressResponse := dto.NewAddressResponse(address.ID, address.City, address.Province, address.PostalCode, address.Country, address.Street, address.Number)
+	return addressResponse, nil
 }
-func (u *AddressUseCase) GetFilteredAddresses(filters map[string]string) ([]entities.Address, error) {
+func (u *AddressUseCase) GetFilteredAddresses(filters map[string]string) ([]dto.AddressResponse, error) {
 	// Validar el orden si está presente
 	if order, exists := filters["order"]; exists {
 		if order != "asc" && order != "desc" {
@@ -73,5 +82,17 @@ func (u *AddressUseCase) GetFilteredAddresses(filters map[string]string) ([]enti
 		}
 	}
 
-	return u.service.GetFilteredAddresses(filters)
+	addresses, err := u.service.GetFilteredAddresses(filters)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convertir cada Address a AddressResponse
+	var addressResponses []dto.AddressResponse
+	for _, address := range addresses {
+		addressResponses = append(addressResponses, *dto.NewAddressResponse(
+			address.ID, address.City, address.Province, address.PostalCode, address.Country, address.Street, address.Number))
+	}
+
+	return addressResponses, nil
 }
