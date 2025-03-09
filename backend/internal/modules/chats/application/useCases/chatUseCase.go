@@ -81,7 +81,7 @@ func (u *ChatUseCase) GetFilteredChats(filters map[string]string) ([]dto.ChatRes
 
 	// Validar columna de orden si está presente
 	if sortBy, exists := filters["sort_by"]; exists {
-		validSortColumns := map[string]bool{"created_at": true, "updated_at": true, "name": true, "contact": true}
+		validSortColumns := map[string]bool{"created_at": true, "updated_at": true}
 		if !validSortColumns[sortBy] {
 			delete(filters, "sort_by") // Eliminar si no es válido
 		}
