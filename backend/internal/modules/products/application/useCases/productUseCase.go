@@ -61,7 +61,7 @@ func (u *ProductUseCase) DeleteProduct(id uint) error {
 // 	return u.service.GetProductByID(id)
 // }
 
-func (u *ProductUseCase) GetProductByID(id uint, userID uint) (*entities.ProductWithFavoriteStatus, error) {
+func (u *ProductUseCase) GetProductByID(id uint, userID uint) (*dto.ProductResponse, error) {
 	if id == 0 {
 		return nil, ErrInvalid
 	}
@@ -110,7 +110,7 @@ func (u *ProductUseCase) GetFilteredProducts(filters map[string]string) ([]entit
 
 	return u.service.GetFilteredProducts(filters)
 }
-func (u *ProductUseCase) GetProductsWithFavorites(userID uint, filters map[string]string) ([]entities.ProductWithFavoriteStatus, error) {
+func (u *ProductUseCase) GetProductsWithFavorites(userID uint, filters map[string]string) ([]dto.ProductResponse, error) {
 	// Validar el orden si está presente
 	if order, exists := filters["order"]; exists {
 		if order != "asc" && order != "desc" {

@@ -80,7 +80,7 @@ func (s *ProductService) DeleteProduct(id uint) error {
 func (s *ProductService) GetProductByID(id uint) (*entities.Product, error) {
 	return s.repo.GetProductByID(id)
 }
-func (s *ProductService) GetProductByIDWithFavorite(id uint, userID uint) (*entities.ProductWithFavoriteStatus, error) {
+func (s *ProductService) GetProductByIDWithFavorite(id uint, userID uint) (*dto.ProductResponse, error) {
 	return s.repo.GetProductByIDWithFavorite(id, userID)
 }
 func (s *ProductService) AddToFavorites(userID uint, productID uint) error {
@@ -103,6 +103,6 @@ func (s *ProductService) GetFavorites(userID uint) ([]entities.Product, error) {
 func (s *ProductService) GetFilteredProducts(filters map[string]string) ([]entities.Product, error) {
 	return s.repo.GetFilteredProducts(filters)
 }
-func (s *ProductService) GetProductsWithFavorites(userID uint, filters map[string]string) ([]entities.ProductWithFavoriteStatus, error) {
+func (s *ProductService) GetProductsWithFavorites(userID uint, filters map[string]string) ([]dto.ProductResponse, error) {
 	return s.repo.GetProductsWithFavorites(userID, filters)
 }

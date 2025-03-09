@@ -3,10 +3,12 @@ package repositories
 import (
 	"errors"
 	"fmt"
+	"strconv"
+
+	"github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
 	"github.com/javierjpv/edenBooks/internal/modules/products/domain/entities"
 	userEntities "github.com/javierjpv/edenBooks/internal/modules/users/domain/entities"
 	"gorm.io/gorm"
-	"strconv"
 )
 
 type ProductRepository struct {
@@ -44,19 +46,19 @@ func (r *ProductRepository) GetProductByID(id uint) (*entities.Product, error) {
 	var product entities.Product
 	err := r.db.First(&product, id).Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) { 
-			return nil, fmt.Errorf("product with ID %d not found", id) 
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("product with ID %d not found", id)
 		}
 		return nil, fmt.Errorf("error fetching product: %w", err)
 	}
 	return &product, nil
 }
-func (r *ProductRepository) GetProductByIDWithFavorite(id uint, userID uint) (*entities.ProductWithFavoriteStatus, error) {
+func (r *ProductRepository) GetProductByIDWithFavorite(id uint, userID uint) (*dto.ProductResponse, error) {
 	var product entities.Product
 	err := r.db.First(&product, id).Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) { 
-			return nil, fmt.Errorf("product with ID %d not found", id) 
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("product with ID %d not found", id)
 		}
 		return nil, fmt.Errorf("error fetching product: %w", err)
 	}
@@ -71,20 +73,19 @@ func (r *ProductRepository) GetProductByIDWithFavorite(id uint, userID uint) (*e
 	}
 
 	// Retornar el producto con el estado de favorito
-	return &entities.ProductWithFavoriteStatus{
-		Product:   product,
+	return &dto.ProductResponse{
+		Product:    product,
 		IsFavorite: count > 0, // Si count > 0, es favorito
 	}, nil
 }
 func (r *ProductRepository) AddToFavorites(userID uint, productID uint) error {
 	product := &entities.Product{}
 
-
 	if err := r.db.First(product, productID).Error; err != nil {
 		fmt.Println("Error: Producto con ID", productID, "no encontrado en la BD")
 		return fmt.Errorf("product with ID %d not found", productID)
 	}
-	// Agregar a favoritos 
+	// Agregar a favoritos
 	if err := r.db.Model(product).Association("FavoritedBy").Append(&userEntities.User{Model: gorm.Model{ID: userID}}); err != nil {
 		fmt.Println("Error al agregar a favoritos:", err)
 		return err
@@ -95,12 +96,12 @@ func (r *ProductRepository) AddToFavorites(userID uint, productID uint) error {
 func (r *ProductRepository) GetFavorites(userID uint) ([]entities.Product, error) {
 	var products []entities.Product
 
-	// Realizamos el JOIN 
+	// Realizamos el JOIN
 	err := r.db.
 		Joins("JOIN user_favourites uf ON uf.product_id = products.id").
 		Where("uf.user_id = ?", userID).
 		Find(&products).Error
-	
+
 	if err != nil {
 		fmt.Println("Error al obtener los productos favoritos:", err)
 		return nil, err
@@ -111,7 +112,6 @@ func (r *ProductRepository) GetFavorites(userID uint) ([]entities.Product, error
 
 func (r *ProductRepository) RemoveFromFavorites(userID uint, productID uint) error {
 	product := &entities.Product{}
-
 
 	if err := r.db.First(product, productID).Error; err != nil {
 		fmt.Println("product not found")
@@ -134,8 +134,8 @@ func (r *ProductRepository) RemoveFromFavorites(userID uint, productID uint) err
 		return err
 	}
 
-		return nil
-	}
+	return nil
+}
 func (r *ProductRepository) GetFilteredProducts(filters map[string]string) ([]entities.Product, error) {
 	var products []entities.Product
 	query := r.db
@@ -189,8 +189,9 @@ func (r *ProductRepository) GetFilteredProducts(filters map[string]string) ([]en
 
 	return products, nil
 }
+
 // Función para obtener los productos y marcar si están en favoritos
-func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[string]string) ([]entities.ProductWithFavoriteStatus, error) {
+func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[string]string) ([]dto.ProductResponse, error) {
 	var products []entities.Product
 	var favoriteProductIDs []uint
 
@@ -202,7 +203,7 @@ func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[st
 			query = query.Where("name ILIKE ?", "%"+value+"%")
 		case "description":
 			query = query.Where("description ILIKE ?", "%"+value+"%")
-		// Agrega más filtros según sea necesario
+			// Agrega más filtros según sea necesario
 		}
 	}
 
@@ -229,12 +230,12 @@ func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[st
 	}
 
 	// Crear un slice de ProductWithFavoriteStatus para devolver
-	var productsWithStatus []entities.ProductWithFavoriteStatus
+	var productsWithStatus []dto.ProductResponse
 	for _, product := range products {
 		// Verificar si el producto está en la lista de favoritos del usuario
 		isFavorite := contains(favoriteProductIDs, product.ID)
-		productsWithStatus = append(productsWithStatus, entities.ProductWithFavoriteStatus{
-			Product:   product,
+		productsWithStatus = append(productsWithStatus, dto.ProductResponse{
+			Product:    product,
 			IsFavorite: isFavorite,
 		})
 	}
