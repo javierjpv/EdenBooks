@@ -1,7 +1,6 @@
 
 ### README del Backend (backend/README.md)
 
-```markdown
 # Backend Architecture
 
 El backend de EdenBooks está construido utilizando las siguientes arquitecturas y principios:
