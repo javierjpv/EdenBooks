@@ -5,6 +5,7 @@ type OrderRequest struct {
 	UserID        uint   `json:"userID"`
 	AddressID     uint   `json:"addressID"`
 	CarrierID     uint   `json:"carrierID"`
+	OrderID     uint     `json:"orderID"`
 	TransactionID uint   `json:"transactionID"`
 }
 
