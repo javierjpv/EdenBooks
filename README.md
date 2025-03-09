@@ -27,7 +27,8 @@ EdenBooks es una plataforma diseñada para facilitar la compra y venta de libros
 ### Prerequisitos
 
 - [Go](https://golang.org/doc/install)
-- [Node.js y yarn](https://nodejs.org/en/download/)
+- [Node.js](https://nodejs.org/en/download/)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install)
 
 ### Instalación
 
