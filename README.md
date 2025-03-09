@@ -34,7 +34,6 @@ EdenBooks es una plataforma diseñada para facilitar la compra y venta de libros
 
 1. Clona el repositorio:
    git clone https://github.com/javierjpv/EdenBooks.git
-   cd EdenBooks
 
 2. Instala las dependencias del backend:
 go mod download
