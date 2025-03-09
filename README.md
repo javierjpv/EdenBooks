@@ -48,7 +48,7 @@ yarn
 go run main.go
 
 2. Inicia el servidor de desarrollo del frontend:
-yarn dev dev
+yarn dev
 
 3. Abre tu navegador y navega a http://localhost:5173 para acceder a la aplicación.
 
