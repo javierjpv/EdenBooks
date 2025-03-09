@@ -5,7 +5,6 @@ export interface IChatResponse{
     ID: number;
     CreatedAt: string;
     UpdatedAt: string;
-    DeletedAt: string | null;
     Users:IUser[] 
     Messages:null|IMessageResponse[]
 }

@@ -11,7 +11,6 @@ export const FromChatResponse=(chatDto:IChatResponse):IChat=>{
     const chat:IChat={
         ID:chatDto.ID,
        CreatedAt:chatDto.CreatedAt,
-       DeletedAt:chatDto.DeletedAt,
        UpdatedAt:chatDto.UpdatedAt,
        Messages:messages,
        Users:chatDto.Users
