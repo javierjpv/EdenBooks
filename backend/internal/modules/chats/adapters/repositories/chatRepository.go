@@ -97,14 +97,6 @@ func (r *ChatRepository) GetChatByID(id uint) (*entities.Chat, error) {
 func (r *ChatRepository) GetFilteredChats(filters map[string]string) ([]entities.Chat, error) {
 	var chats []entities.Chat
 	query := r.db
-	// // Aplicar filtros dinámicos
-	// for key, value := range filters {
-	// 	switch key {
-	// 	case "user_id":
-	// 		query = query.Where("user_id = ?", value)
-	// 	}
-	// }
-	// Aplicar filtros dinámicos
 	for key, value := range filters {
 		switch key {
 		case "user_id":

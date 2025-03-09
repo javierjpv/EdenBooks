@@ -10,6 +10,13 @@ type UserResponse struct {
 	AddressID uint //opcional
 }
 
-// func NewUserResponse()*UserResponse{
-
-// }
+func NewUserResponse(id uint, email, token, name, tel string, addressID uint) *UserResponse {
+	return &UserResponse{
+		ID:        id,
+		Email:     email,
+		Token:     token,
+		Name:      name,
+		Tel:       tel,
+		AddressID: addressID,
+	}
+}

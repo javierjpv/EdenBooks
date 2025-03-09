@@ -48,14 +48,18 @@ func (u *MessageUseCase) DeleteMessage(id uint) error {
 	return u.service.DeleteMessage(id)
 }
 
-func (u *MessageUseCase) GetMessageByID(id uint) (*entities.Message, error) {
+func (u *MessageUseCase) GetMessageByID(id uint) (*dto.MessageResponse, error) {
 	if id == 0 {
 		return nil, ErrInvalid
 	}
-	return u.service.GetMessageByID(id)
+	message, err := u.service.GetMessageByID(id)
+	if err != nil {
+		return nil, err
+	}
+	messageResponse := dto.NewMessageResponse(message.ID, message.CreatedAt, message.UpdatedAt, message.Content, message.Seen, message.Status, message.ChatID, message.SenderID, message.ReceiverID)
+	return messageResponse, nil
 }
-
-func (u *MessageUseCase) GetFilteredMessages(filters map[string]string) ([]entities.Message, error) {
+func (u *MessageUseCase) GetFilteredMessages(filters map[string]string) ([]dto.MessageResponse, error) {
 	// Validar el orden si está presente
 	if order, exists := filters["order"]; exists {
 		if order != "asc" && order != "desc" {
@@ -65,11 +69,23 @@ func (u *MessageUseCase) GetFilteredMessages(filters map[string]string) ([]entit
 
 	// Validar columna de orden si está presente
 	if sortBy, exists := filters["sort_by"]; exists {
-		validSortColumns := map[string]bool{"content": true, "user_id": true}
+		validSortColumns := map[string]bool{"created_at": true, "updated_at": true, "name": true, "contact": true}
 		if !validSortColumns[sortBy] {
 			delete(filters, "sort_by") // Eliminar si no es válido
 		}
 	}
 
-	return u.service.GetFilteredMessages(filters)
+	messagees, err := u.service.GetFilteredMessages(filters)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convertir cada Message a MessageResponse
+	var messageResponses []dto.MessageResponse
+	for _, message := range messagees {
+		messageResponses = append(messageResponses, *dto.NewMessageResponse(
+			message.ID, message.CreatedAt, message.UpdatedAt, message.Content, message.Seen, message.Status, message.ChatID, message.SenderID, message.ReceiverID))
+	}
+
+	return messageResponses, nil
 }
