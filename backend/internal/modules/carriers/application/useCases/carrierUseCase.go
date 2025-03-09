@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/javierjpv/edenBooks/internal/modules/carriers/application/dto"
-	"github.com/javierjpv/edenBooks/internal/modules/carriers/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/carriers/domain/services"
 )
 
@@ -45,13 +44,18 @@ func (u *CarrierUseCase) DeleteCarrier(id uint) error {
 	return u.service.DeleteCarrier(id)
 }
 
-func (u *CarrierUseCase) GetCarrierByID(id uint) (*entities.Carrier, error) {
+func (u *CarrierUseCase) GetCarrierByID(id uint) (*dto.CarrierResponse, error) {
 	if id == 0 {
 		return nil, ErrInvalidID
 	}
-	return u.service.GetCarrierByID(id)
+	carrier, err := u.service.GetCarrierByID(id)
+	if err != nil {
+		return nil, err
+	}
+	carrierResponse := dto.NewCarrierResponse(carrier.ID, carrier.Name, carrier.Contact)
+	return carrierResponse, nil
 }
-func (u *CarrierUseCase) GetFilteredCarrieres(filters map[string]string) ([]entities.Carrier, error) {
+func (u *CarrierUseCase) GetFilteredCarrieres(filters map[string]string) ([]dto.CarrierResponse, error) {
 	// Validar el orden si está presente
 	if order, exists := filters["order"]; exists {
 		if order != "asc" && order != "desc" {
@@ -67,5 +71,18 @@ func (u *CarrierUseCase) GetFilteredCarrieres(filters map[string]string) ([]enti
 		}
 	}
 
-	return u.service.GetFilteredCarrieres(filters)
+	// return u.service.GetFilteredCarrieres(filters)
+	carrieres, err := u.service.GetFilteredCarrieres(filters)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convertir cada Carrier a CarrierResponse
+	var carrierResponses []dto.CarrierResponse
+	for _, carrier := range carrieres {
+		carrierResponses = append(carrierResponses, *dto.NewCarrierResponse(
+			carrier.ID,carrier.Name,carrier.Contact))
+	}
+
+	return carrierResponses, nil
 }
