@@ -37,11 +37,17 @@ func (u *UserUseCase) Login(email string, password string) (*entities.User, erro
 	return u.service.Login(email, password)
 
 }
-func (u *UserUseCase) GetUserByID(id uint) (*entities.User, error) {
+func (u *UserUseCase) GetUserByID(id uint) (*dto.UserResponse, error) {
 	if id == 0 {
 		return nil, ErrInvalid
 	}
-	return u.service.GetUserByID(id)
+
+	user,err:=u.service.GetUserByID(id)
+	if err!=nil {
+		return nil,err
+	}
+	userResponse:=dto.UserResponse{ID:user.ID,Email: user.Email }
+	return &userResponse, nil
 }
 
 func (u *UserUseCase) UpdateUser(id uint, user dto.UserRequest) error {

@@ -1,10 +1,9 @@
 export interface IUserResponse{
+    ID:number
     Email:string
-    Password?:string
-    ID?:number
-    Name?:string
-    Token?:string
-    Tel?:string
-    AddressID?:null|number
+    Name:string
+    Token:string
+    Tel:string
+    AddressID?:number
 }
 

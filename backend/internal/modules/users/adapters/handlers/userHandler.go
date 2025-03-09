@@ -81,11 +81,11 @@ func (h *UserHandler) GetUserByID(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "ID inválido"})
 	}
-	user, err := h.useCase.GetUserByID(uint(id))
+	userResponse, err := h.useCase.GetUserByID(uint(id))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Error al obtener el user"})
 	}
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, userResponse)
 }
 
 func (h *UserHandler) UpdateUser(c echo.Context) error {
