@@ -11,4 +11,5 @@ func RegisterUserRoutes(e *echo.Echo, userHandler *handlers.UserHandler){
 	userGroup.POST("/register",userHandler.Register)
 	userGroup.POST("/login",userHandler.Login)
 	userGroup.GET("/:id",userHandler.GetUserByID)
+	userGroup.PUT("/:id",userHandler.UpdateUser)
 }

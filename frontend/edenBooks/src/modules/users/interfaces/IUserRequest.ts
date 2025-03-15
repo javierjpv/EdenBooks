@@ -1,6 +1,6 @@
 export interface IUserRequest{
-    Email:string
-    Password:string
+    Email?:string
+    Password?:string
   
 
     Name?:string

@@ -2,9 +2,9 @@ export interface IAuthStore {
   user: {
     userState: string;
     ID: null | number;
-    Name: undefined|string;
+    Name: string;
     Email: string;
-    Token: undefined|string;
+    Token: string;
     Error: string|undefined;
   };
 }

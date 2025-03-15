@@ -52,4 +52,13 @@ export const userApi: IUserApi = {
       return { success: false, error: axiosError.request?.response };
     }
   },
+  UpdateUser: async (id, user: IUserRequest): Promise<ApiResponse<IUser>> => {
+    try {
+      await axios.put(`${BASE_URL}/${id}`, user);
+      return { success: true };
+    } catch (error) {
+      const axiosError = error as AxiosError<{ error: string }>;
+      return { success: false, error: axiosError.request?.response };
+    }
+  },
 };
