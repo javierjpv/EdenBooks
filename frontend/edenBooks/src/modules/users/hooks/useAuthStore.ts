@@ -26,14 +26,16 @@ export const useAuthStore = () => {
     //a traves de redux
     if (response.success) {
       data = response.data;
-      if (data!!.Token&&data!!.ID) {
+      if (data!!.Token&&data!!.ID&&data!!.ImageURL) {
         const Token = data!!.Token;
         const Email = data!!.Email;
         const ID=data!!.ID;
+        const ImageURL=data!!.ImageURL;
         // localStorage.setItem("token", Token);
         console.log("Token received=>LOGIN: ", Token);
-        dispatch(onLogin({ Token, Email,ID }));
+        dispatch(onLogin({ Token, Email,ID,ImageURL }));
       } else {
+        console.log("falta token, id o imageURL en startLogin",response.data)
         //En caso contarrio se guardara el Error gracias a redux para poder ser usado y mostrarlo donde corresponda,ademas ,el estado del usuario
         //sera "NOT-AUTHENTICATED"
         const Error = response!!.error;
@@ -59,14 +61,15 @@ export const useAuthStore = () => {
       data = response.data;
       //Si la respuesta contiene un token este se guardara en el estado global del usuario ,ademas se guardara ese token en el localStorage y
       //el estado del usuario sera "AUTHENTICATED"
-      if (data!!.Token&&data!!.ID) {
+      if (data!!.Token&&data!!.ID&&data!!.ImageURL) {
         const Token = data!!.Token;
         const Email = data!!.Email;
         const ID=data!!.ID;
+        const ImageURL=data!!.ImageURL;
         // const Email = data.Email;
         // localStorage.setItem("token", Token);
         console.log("Token received=>REGISTER: ", Token);
-        dispatch(onRegister({ Token, Email,ID }));
+        dispatch(onRegister({ Token, Email,ID,ImageURL }));
       } else {
         //En caso contrario se guardara el Error recibido  y el estado "NOT-AUTHENTICATED" en el estado global del usuario (redux)
         const Error = response.error;

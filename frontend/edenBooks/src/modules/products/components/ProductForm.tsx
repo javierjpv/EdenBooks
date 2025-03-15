@@ -259,7 +259,7 @@ export const ProductForm = ({ id }: { id?: number }) => {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel htmlFor="CategoryID">Category</InputLabel>
+             
               <Select
                 id="CategoryID"
                 value={product.CategoryID || ""}
@@ -278,7 +278,6 @@ export const ProductForm = ({ id }: { id?: number }) => {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel htmlFor="ImageURL">Image URL</InputLabel>
               <Input id="ImageURL" name="ImageURL" type="file" />
             </FormControl>
 

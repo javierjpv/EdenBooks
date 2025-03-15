@@ -38,7 +38,7 @@ func (u *UserUseCase) Login(email string, password string) (*dto.UserResponse, e
 	if err!=nil {
 		return nil,err
 	}
-	userResponse:=dto.UserResponse{ID:user.ID,Email: user.Email,Name: user.Name,Tel: user.Tel}
+	userResponse:=dto.UserResponse{ID:user.ID,Email: user.Email,Name: user.Name,Tel: user.Tel,ImageURL: user.ImageURL}
 	return &userResponse, nil
 
 }

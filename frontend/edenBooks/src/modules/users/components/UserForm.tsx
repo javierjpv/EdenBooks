@@ -16,6 +16,9 @@ import {
 import { IUserRequest } from "../interfaces/IUserRequest";
 import { IUserResponse } from "../interfaces/IUserResponse";
 import axios from "axios";
+import { RootState } from "../../../Store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { onUpdateProfileImage } from "../../../Store/auth/authSlice";
 // const checkUser = (user: IUserRequest): boolean => {
 //   if (user.Email && user.Email.trim() === "") {
 //     return false;
@@ -24,6 +27,8 @@ import axios from "axios";
 // };
 export const UserForm = () => {
   const { user } = useAuthStore();
+  
+const dispatch = useDispatch();
   const [profileUserRequest, setprofileUserRequest] =
     useState<IUserRequest | null>(null);
   const [loadingProfileUser, setloadingProfileUser] = useState<boolean>(true);
@@ -99,6 +104,9 @@ export const UserForm = () => {
         return;
       }
     }
+    if (!userToSubmit.ImageURL) {
+      return
+    }
     console.log("handleUserSubmit, user Request a enviar", userToSubmit);
     setloadingSubmitUser(true)
     const response=await userService.UpdateUser(user.ID, userToSubmit);
@@ -106,6 +114,7 @@ export const UserForm = () => {
       console.log("Ha habido un error actualizando el user")
     }else{
       setOpenSnackbar(true);
+      dispatch(onUpdateProfileImage(userToSubmit.ImageURL));
     }
     setloadingSubmitUser(false)
     
@@ -158,7 +167,6 @@ export const UserForm = () => {
               </FormControl>
 
               <FormControl fullWidth>
-              <InputLabel htmlFor="ImageURL">Image URL</InputLabel>
               <Input id="ImageURL" name="ImageURL" type="file" />
             </FormControl>
 

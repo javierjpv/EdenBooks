@@ -5,6 +5,7 @@ export interface IAuthStore {
     Name: string;
     Email: string;
     Token: string;
+    ImageURL: string;
     Error: string|undefined;
   };
 }

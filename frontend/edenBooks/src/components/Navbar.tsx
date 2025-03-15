@@ -14,10 +14,6 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Book, Logout } from "@mui/icons-material";
 import { useAuthStore } from "../modules/users/hooks/useAuthStore";
-import { useEffect, useState } from "react";
-import { IUserRequest } from "../modules/users/interfaces/IUserRequest";
-import { userService } from "../modules/users/services/userService";
-import { IUserResponse } from "../modules/users/interfaces/IUserResponse";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -51,39 +47,7 @@ export function Navbar() {
     navigate("/auth");
   };
 
-  const [profileUserRequest, setprofileUserRequest] =
-    useState<IUserRequest | null>(null);
-  const [loadingProfileUser, setloadingProfileUser] = useState<boolean>(true);
 
-  const fetchUser = async () => {
-    console.log("fetching user");
-    if (!user.ID) {
-      setloadingProfileUser(false);
-      return;
-    }
-    const response = await userService.GetUserById(user.ID);
-    if (response.success && response.data) {
-      console.log("VALOR EN FETCHING USER", response.data);
-      const data: IUserResponse = response.data;
-
-      setprofileUserRequest((prev) => ({
-        ...prev,
-        Name: data.Name,
-        Tel: data.Tel,
-        ImageURL: data.ImageURL,
-      }));
-
-      setloadingProfileUser(false);
-      console.log(data);
-    } else {
-      console.log("Error al llamar a fetchUser");
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
-  
   let pages =
     user?.userState === "AUTHENTICATED"
       ? [
@@ -201,24 +165,12 @@ export function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {loadingProfileUser ? (
-                  <>
-                    <h1>Cargando</h1>
-                  </>
-                ) : profileUserRequest?.ImageURL ? (
-                  <Avatar
+              <Avatar
                     alt="Remy Sharp"
                     src={
-                      profileUserRequest.ImageURL
+                      user.ImageURL
                     }
                   />
-                ) : (
-                  <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/2.jpg"
-                  
-                />
-                )}
               </IconButton>
             </Tooltip>
             <Menu
