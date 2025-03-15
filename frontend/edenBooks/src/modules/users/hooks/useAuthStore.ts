@@ -26,11 +26,14 @@ export const useAuthStore = () => {
     //a traves de redux
     if (response.success) {
       data = response.data;
-      if (data!!.Token&&data!!.ID&&data!!.ImageURL) {
-        const Token = data!!.Token;
-        const Email = data!!.Email;
-        const ID=data!!.ID;
-        const ImageURL=data!!.ImageURL;
+      if (!data) {
+        return
+      }
+      if (data!!.Token&&data!!.ID) {
+        const Token = data.Token;
+        const Email = data.Email;
+        const ID=data.ID;
+        const ImageURL=data.ImageURL??"";
         // localStorage.setItem("token", Token);
         console.log("Token received=>LOGIN: ", Token);
         dispatch(onLogin({ Token, Email,ID,ImageURL }));
@@ -59,12 +62,15 @@ export const useAuthStore = () => {
     let data;
     if (response.success) {
       data = response.data;
+      if (!data) {
+        return
+      }
       //Si la respuesta contiene un token este se guardara en el estado global del usuario ,ademas se guardara ese token en el localStorage y
       //el estado del usuario sera "AUTHENTICATED"
       if (data!!.Token&&data!!.ID) {
-        const Token = data!!.Token;
-        const Email = data!!.Email;
-        const ID=data!!.ID;
+        const Token = data.Token;
+        const Email = data.Email;
+        const ID=data.ID;
     
         // const Email = data.Email;
         // localStorage.setItem("token", Token);
