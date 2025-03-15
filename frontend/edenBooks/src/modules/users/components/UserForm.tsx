@@ -16,8 +16,7 @@ import {
 import { IUserRequest } from "../interfaces/IUserRequest";
 import { IUserResponse } from "../interfaces/IUserResponse";
 import axios from "axios";
-import { RootState } from "../../../Store/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { onUpdateProfileImage } from "../../../Store/auth/authSlice";
 // const checkUser = (user: IUserRequest): boolean => {
 //   if (user.Email && user.Email.trim() === "") {
