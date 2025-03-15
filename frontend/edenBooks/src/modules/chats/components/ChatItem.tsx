@@ -28,6 +28,11 @@ export const ChatItem = ({ chat }: { chat: IChatResponse }) => {
           </ListItemAvatar>
           {chat.Users.filter((chatUser) => chatUser?.ID != user.ID).map(
             (chatUser) => (
+              <Typography key={chatUser.ID} variant="body2">{chatUser.Name}</Typography>
+            )
+          )}
+          {chat.Users.filter((chatUser) => chatUser?.ID != user.ID).map(
+            (chatUser) => (
               <Typography key={chatUser.ID} variant="body2">{chatUser.Email}</Typography>
             )
           )}

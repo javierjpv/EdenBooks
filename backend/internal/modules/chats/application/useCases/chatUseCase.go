@@ -55,6 +55,8 @@ func (u *ChatUseCase) GetChatByID(id uint) (*dto.ChatResponse, error) {
 		users = append(users, userDto.UserResponse{
 			ID:    user.ID,
 			Email: user.Email,
+			Name: user.Name,
+			ImageURL: user.ImageURL,
 		})
 	}
 	// Convertir cada mensaje en MessageResponse (si es necesario)
@@ -101,6 +103,8 @@ func (u *ChatUseCase) GetFilteredChats(filters map[string]string) ([]dto.ChatRes
 			users = append(users, userDto.UserResponse{
 				ID:    user.ID,
 				Email: user.Email,
+				Name: user.Name,
+				ImageURL: user.ImageURL,
 			})
 		}
 

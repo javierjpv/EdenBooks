@@ -42,7 +42,7 @@ const dispatch = useDispatch();
     const response = await userService.GetUserById(user.ID);
     if (response.success && response.data) {
       console.log("VALOR EN FETCHING USER",response.data)
-      const data: IUserResponse = response.data;
+      const data = response.data;
 
       setprofileUserRequest(prev => ({
         ...prev,

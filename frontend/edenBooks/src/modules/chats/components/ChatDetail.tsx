@@ -165,6 +165,7 @@ export const ChatDetail = () => {
             chat.Users.filter((chatUser) => chatUser?.ID != user.ID).map(
               (chatUser) => (
                 <Box key={chatUser.ID}>
+                   <Typography variant="body2">{chatUser.Name}</Typography>
                   <Typography variant="body2">{chatUser.Email}</Typography>
                 </Box>
               )
