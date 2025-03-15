@@ -6,6 +6,7 @@ type UserRequest struct {
 	Password  string `json:"password"`
 	Tel       string `json:"tel"`
 	AddressID *uint  `json:"addressID"`
+	ImageURL  string  `json:"ImageURL"`
 }
 
 //NAME Y TEL SERAN OPCIONALES YA QUE ESTE DTO SE USARA TANTO EN REGISTER COMO

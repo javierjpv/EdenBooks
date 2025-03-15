@@ -17,6 +17,7 @@ type User struct{
 	// Role string //poner user por defecto
 	Tel string   `gorm:"default:''"`
 	AddressID *uint  `gorm:"default:NULL"`
+	ImageURL string  `gorm:"default:''"`
 	//En Gorm en las relaciones 1:N la clave foranea ira hacia la tabla N
 	//En estos casos donde habra un array al haber colocado ya la clave foranea donde corresponde Gorm podra relacionarlos y entonces cuando el usuario tenga por ejemplo orders
 	//relacionadas con un userId se podra acceder a este array mediante  Preload

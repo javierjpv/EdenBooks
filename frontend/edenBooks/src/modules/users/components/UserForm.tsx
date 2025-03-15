@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { IUserRequest } from "../interfaces/IUserRequest";
 import { IUserResponse } from "../interfaces/IUserResponse";
+import axios from "axios";
 // const checkUser = (user: IUserRequest): boolean => {
 //   if (user.Email && user.Email.trim() === "") {
 //     return false;
@@ -43,6 +44,7 @@ export const UserForm = () => {
         ...prev,
         Name: data.Name,
         Tel: data.Tel,
+        ImageURL: data.ImageURL,
       }));
 
       setloadingProfileUser(false);
@@ -81,10 +83,25 @@ export const UserForm = () => {
     //   console.log("Hay un campo que nos e ha rellenado correctamente");
     //   return;
     // }
+    let userToSubmit = { ...profileUserRequest };
 
-    console.log("handleUserSubmit, user Request a enviar", profileUserRequest);
+    const fileInput = document.getElementById("ImageURL") as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+    if (file) {
+      try {
+        setloadingSubmitUser(true);
+        const imageUrl = await handleImageUpload(file);
+        userToSubmit = { ...userToSubmit, ImageURL: imageUrl };
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        setloadingSubmitUser(false);
+
+        return;
+      }
+    }
+    console.log("handleUserSubmit, user Request a enviar", userToSubmit);
     setloadingSubmitUser(true)
-    const response=await userService.UpdateUser(user.ID, profileUserRequest);
+    const response=await userService.UpdateUser(user.ID, userToSubmit);
     if (!response.success) {
       console.log("Ha habido un error actualizando el user")
     }else{
@@ -94,9 +111,24 @@ export const UserForm = () => {
     
   };
 
-  useEffect(() => {
-    console.log("ESTADO ACTIUAL DE USER REQUEST", profileUserRequest);
-  }, [profileUserRequest]);
+
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "javier");
+
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_CLOUDINARY_URL, //url cloudinary
+        formData
+      );
+      return response.data.secure_url;
+    } catch (error) {
+      console.error("Error al subir la imagen a Cloudinary", error);
+      throw error;
+    }
+  };
+
   return (
     <>
       {loadingProfileUser ? (
@@ -124,6 +156,11 @@ export const UserForm = () => {
                   onChange={handleInputChange}
                 />
               </FormControl>
+
+              <FormControl fullWidth>
+              <InputLabel htmlFor="ImageURL">Image URL</InputLabel>
+              <Input id="ImageURL" name="ImageURL" type="file" />
+            </FormControl>
 
               <Button
                 disabled={loadingSubmitUser}

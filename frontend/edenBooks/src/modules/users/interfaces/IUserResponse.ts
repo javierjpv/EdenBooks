@@ -5,5 +5,6 @@ export interface IUserResponse{
     Token:string
     Tel:string
     AddressID?:number
+    ImageURL?:string
 }
 

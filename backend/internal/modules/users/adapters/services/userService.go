@@ -48,5 +48,6 @@ func (s *UserService) UpdateUser(id uint, u dto.UserRequest) error {
 	user.Name = u.Name
 	user.Tel = u.Tel
 	user.AddressID = u.AddressID
+	user.ImageURL = u.ImageURL
 	return s.userRepo.UpdateUser(user)
 }

@@ -8,9 +8,10 @@ type UserResponse struct {
 	Name      string  //opcional
 	Tel       string //opcional
 	AddressID uint //opcional
+	ImageURL  string //opcional
 }
 
-func NewUserResponse(id uint, email, token, name, tel string, addressID uint) *UserResponse {
+func NewUserResponse(id uint, email, token, name, tel string, addressID uint,ImageURL  string) *UserResponse {
 	return &UserResponse{
 		ID:        id,
 		Email:     email,
@@ -18,5 +19,6 @@ func NewUserResponse(id uint, email, token, name, tel string, addressID uint) *U
 		Name:      name,
 		Tel:       tel,
 		AddressID: addressID,
+		ImageURL: ImageURL,
 	}
 }

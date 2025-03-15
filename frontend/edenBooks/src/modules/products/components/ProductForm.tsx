@@ -94,7 +94,7 @@ export const ProductForm = ({ id }: { id?: number }) => {
       ImageURL: "",
     });
   };
-  // Cloud name: dtwb3p8m7 my preset:javier
+  
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);

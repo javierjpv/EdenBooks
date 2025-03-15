@@ -5,5 +5,6 @@ export interface IUserRequest{
 
     Name?:string
     Tel?:string
+    ImageURL?:string
 }
 

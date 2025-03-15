@@ -9,7 +9,8 @@ export const FromUserResponse = (userResponse:IUserResponse) => {
     Token:userResponse.Token,
     Name:userResponse.Name,
     AddressID:userResponse.AddressID,
-    Tel:userResponse.Tel
+    Tel:userResponse.Tel,
+    ImageURL:userResponse.ImageURL
 
   };
   return user

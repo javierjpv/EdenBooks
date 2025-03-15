@@ -51,7 +51,7 @@ func (u *UserUseCase) GetUserByID(id uint) (*dto.UserResponse, error) {
 	if err!=nil {
 		return nil,err
 	}
-	userResponse:=dto.UserResponse{ID:user.ID,Email: user.Email,Name: user.Name,Tel: user.Tel}
+	userResponse:=dto.UserResponse{ID:user.ID,Email: user.Email,Name: user.Name,Tel: user.Tel,ImageURL: user.ImageURL}
 	return &userResponse, nil
 }
 
