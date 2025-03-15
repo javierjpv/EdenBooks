@@ -61,15 +61,15 @@ export const useAuthStore = () => {
       data = response.data;
       //Si la respuesta contiene un token este se guardara en el estado global del usuario ,ademas se guardara ese token en el localStorage y
       //el estado del usuario sera "AUTHENTICATED"
-      if (data!!.Token&&data!!.ID&&data!!.ImageURL) {
+      if (data!!.Token&&data!!.ID) {
         const Token = data!!.Token;
         const Email = data!!.Email;
         const ID=data!!.ID;
-        const ImageURL=data!!.ImageURL;
+    
         // const Email = data.Email;
         // localStorage.setItem("token", Token);
         console.log("Token received=>REGISTER: ", Token);
-        dispatch(onRegister({ Token, Email,ID,ImageURL }));
+        dispatch(onRegister({ Token, Email,ID}));
       } else {
         //En caso contrario se guardara el Error recibido  y el estado "NOT-AUTHENTICATED" en el estado global del usuario (redux)
         const Error = response.error;

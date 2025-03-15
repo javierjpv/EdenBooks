@@ -64,12 +64,11 @@ export const authSlice = createSlice({
     
     },
     //Se llevara a cabo una vez la solicitud de registro de un nuevo usuario del backend es correcta
-    onRegister: (state, action: PayloadAction<{ Token: string; Email: string;ID: number;ImageURL: string}>) => {
+    onRegister: (state, action: PayloadAction<{ Token: string; Email: string;ID: number}>) => {
       state.user = {...state.user, userState: 'AUTHENTICATED'}
       state.user = {...state.user, Token: action.payload.Token}
       state.user = {...state.user, Email: action.payload.Email}
       state.user = {...state.user, ID: action.payload.ID}
-      state.user = {...state.user,ImageURL : action.payload.ImageURL}
       state.user = {...state.user, Error:''}
       localStorage.setItem("user", JSON.stringify(state.user));
 

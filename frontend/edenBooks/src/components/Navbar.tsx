@@ -167,9 +167,7 @@ export function Navbar() {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar
                     alt="Remy Sharp"
-                    src={
-                      user.ImageURL
-                    }
+                    src={user.ImageURL??"/418eyXxdCsL._SY445_SX342_.jpg"}
                   />
               </IconButton>
             </Tooltip>
