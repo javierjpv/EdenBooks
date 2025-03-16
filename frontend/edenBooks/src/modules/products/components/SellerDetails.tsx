@@ -15,7 +15,9 @@ export const SellerDetails = ({ sellerID }: { sellerID: number }) => {
   const [loading, setloading] = useState(true);
 
   const fetchSeller = async () => {
+    console.log("sellerID en fetchseller",sellerID)
     const response = await userService.GetUserById(sellerID);
+    console.log("response en fetchseller",response)
     setloading(false);
     if (response.success && response.data) {
       setseller(response.data);

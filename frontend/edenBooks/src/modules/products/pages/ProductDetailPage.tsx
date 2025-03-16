@@ -14,24 +14,24 @@ export const ProductDetailPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, seterror] = useState(false);
-  const [productError, setproductError] = useState<boolean>(false)
+  const [productError, setproductError] = useState<boolean>(false);
   const [loading, setloading] = useState<boolean>(true);
   const [product, setproduct] = useState<IProduct | null>(null);
 
   const getProduct = async (): Promise<void> => {
-    try {
-      const fetchedProduct: IProduct = await productService.GetProductById(
-        Number(id)
-      );
-      setTimeout(() => {
-        setloading(false);
-      }, 200);
-      setproduct(fetchedProduct);
-    } catch (error) {
-      setproductError(true)
+    const response = await productService.GetProductById(Number(id));
+    setTimeout(() => {
       setloading(false);
-      console.log("Error al obtener el product Detail");
+    }, 200);
+    if (response.success && response.data) {
+      setproductError(true);
+      const fetchedProduct: IProduct = response.data;
+      console.log("Product fetched", fetchedProduct);
+      setproduct(fetchedProduct);
+      return;
     }
+    setproductError(true);
+    console.log("Error al obntener el producto en productDetailPage");
   };
 
   const checkProduct = (product: IProduct): boolean => {
@@ -46,8 +46,8 @@ export const ProductDetailPage = () => {
       product.Name.trim() === "" ||
       product.UserID <= 0 ||
       product.CategoryID <= 0 ||
-      product.ID <= 0
-      ||product.Sold===true
+      product.ID <= 0 ||
+      product.Sold === true
     ) {
       return false;
     }
@@ -75,40 +75,37 @@ export const ProductDetailPage = () => {
     }, 3000);
   };
 
-
-
   useEffect(() => {
     getProduct();
   }, [id]);
 
   return (
-    
-      <Container sx={{ marginTop: 22 }} maxWidth="md">
-        {loading ? (
-          <>
-            <Skeleton variant="text" width="60%" height={40} />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={300}
-              sx={{ mt: 2 }}
-            />
-            <Skeleton variant="text" width="40%" sx={{ mt: 2 }} />
-            <Skeleton variant="text" width="80%" sx={{ mt: 1 }} />
-          </>
-) :  !product&&productError ? (
-  <p>Ha ocurrido un error en ProductDetail</p>
-) :  (
-          <>          
-            <ProductDetail product={product} />
+    <Container sx={{ marginTop: 22 }} maxWidth="md">
+      {loading ? (
+        <>
+          <Skeleton variant="text" width="60%" height={40} />
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={300}
+            sx={{ mt: 2 }}
+          />
+          <Skeleton variant="text" width="40%" sx={{ mt: 2 }} />
+          <Skeleton variant="text" width="80%" sx={{ mt: 1 }} />
+        </>
+      ) : !product && productError ? (
+        <p>Ha ocurrido un error en ProductDetail</p>
+      ) : (
+        <>
+          {product && (
+            <>
+              <ProductDetail product={product} />
+              <ReviewList />
 
-
-
-            <ReviewList />
-
-            { product&&user.userState === "AUTHENTICATED" &&
-              Number(user.ID) !== product.UserID && !product.Sold&&(
-                
+              {product &&
+                user.userState === "AUTHENTICATED" &&
+                Number(user.ID) !== product.UserID &&
+                !product.Sold && (
                   <Box
                     marginTop={3}
                     display={"flex"}
@@ -124,11 +121,11 @@ export const ProductDetailPage = () => {
                       Comprar
                     </Button>
                   </Box>
-                
-              )}
-          </>
-        )}
-      </Container>
-    
+                )}
+            </>
+          )}
+        </>
+      )}
+    </Container>
   );
 };

@@ -11,16 +11,17 @@ export const ProductList = () => {
   const [searchParams] = useSearchParams(); // Obtenemos los query params
 
   const fetchProducts = async () => {
-    try {
-      const fetchedProducts = await productService.GetProducts(searchParams);
-      seterror(false);
-      setproducts(fetchedProducts);
-    } catch (error) {
+
+      const response = await productService.GetProducts(searchParams);
+      setLoading(false);
+      if (response.success && response.data) {
+        seterror(false);+
+        console.log("Products in productList", response.data);
+        setproducts(response.data);
+        return
+      }    
       seterror(true);
       console.error("Error al obtener los productos:", error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   useEffect(() => {

@@ -5,18 +5,12 @@ import { IProductService } from "../interfaces/IProductService";
 import { FromProductResponse } from "../mappers/productMapper";
 
 export const productService: IProductService = {
-  GetProducts: async (): Promise<IProduct[]> => {
-    try {
-      const productsDto = await productApi.GetProducts();
-      const products: IProduct[] = productsDto.map((productDto) =>
-        FromProductResponse(productDto)
-      );
-      return products;
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      throw new Error("Error fetching products");
-    }
-  },
+    CreateProduct: async (product: IProductRequest) =>productApi.CreateProduct(product),
+    GetProducts: async (params?: URLSearchParams) => productApi.GetProducts(params),
+    GetProductById: async (id: number) => productApi.GetProductById(id),
+    UpdateProduct: async (id: number, product: IProductRequest) =>productApi.UpdateProduct(id, product),
+    DeleteProduct: async (id: number) => productApi.DeleteProduct(id),
+    
   GetFavorites: async (): Promise<IProduct[]> => {
     try {
       const productsDto = await productApi.GetFavorites();
@@ -27,44 +21,6 @@ export const productService: IProductService = {
     } catch (error) {
       console.error("Error fetching products:", error);
       throw new Error("Error fetching products");
-    }
-  },
-  GetProductById: async (id: number): Promise<IProduct> => {
-    try {
-      const productDto = await productApi.GetProductById(id);
-      const product = FromProductResponse(productDto);
-      return product;
-    } catch (error) {
-      console.log("Error al obtener un producto");
-      throw new Error("Error al obtener un producto");
-    }
-  },
-  CreateProduct: async (product: IProductRequest): Promise<void> => {
-    try {
-      await productApi.CreateProduct(product);
-    } catch (error: any) {
-      if (error.response) {
-        console.log("Error del servidor:", error.response.data);
-      } else {
-        console.log("Error de conexión:", error.message);
-      }
-      throw new Error("Error al crear un producto");
-    }
-  },
-  UpdateProduct: async (id: number, product: IProductRequest): Promise<void> => {
-    try {
-      await productApi.UpdateProduct(id, product);
-    } catch (error) {
-      console.log("Error al actualizar un producto");
-      throw new Error("Error al actualizar un producto");
-    }
-  },
-  DeleteProduct: async (id: number): Promise<void> => {
-    try {
-      await productApi.DeleteProduct(id);
-    } catch (error) {
-      console.log("Error al borrar un producto");
-      throw new Error("Error al borrar un producto");
     }
   },
   AddToFavorite: async (id: number): Promise<void> => {

@@ -25,17 +25,17 @@ import {
   MoreVert,
 } from "@mui/icons-material";
 import { productService } from "../services/productService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
 import { SellerDetails } from "./SellerDetails";
 import { chatService } from "../../chats/services/chatService";
 
-export const ProductDetail = ({ product }: { product: IProduct | null }) => {
+export const ProductDetail = ({ product }: { product: IProduct }) => {
   const { user } = useAuthStore();
   const [loadingDelete, setloadingDelete] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
-  const [isFavorite, setIsFavorite] = useState(product ? product.isFavorite : false);
+  const [isFavorite, setIsFavorite] = useState(product.isFavorite);
   const navigate = useNavigate();
   const handleDelete = async (id: number): Promise<void> => {
     try {
@@ -113,6 +113,10 @@ export const ProductDetail = ({ product }: { product: IProduct | null }) => {
       console.log("Error al actualizar favorito", error);
     }
   };
+  useEffect(() => {
+console.log("product en productDetail",product)
+  }, [])
+  
 
   return (
     <>

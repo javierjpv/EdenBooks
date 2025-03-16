@@ -21,7 +21,7 @@ import { useAuthStore } from "../../users/hooks/useAuthStore";
 export const ProductItem = ({ product }: { product: IProduct }) => {
   const { user } = useAuthStore();
   const [loadingDelete, setloadingDelete] = useState<boolean>(false);
-  const [isFavorite, setIsFavorite] = useState<boolean>(product.isFavorite);
+  const [isFavorite, setIsFavorite] = useState(product.isFavorite);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const navigate = useNavigate();
 

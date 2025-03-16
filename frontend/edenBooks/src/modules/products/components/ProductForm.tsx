@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { IProduct } from "../interfaces/IProduct";
 import { productService } from "../services/productService";
 import { ICategory } from "../../categories/interfaces/ICategory";
 import { useNavigate } from "react-router";
@@ -94,7 +93,7 @@ export const ProductForm = ({ id }: { id?: number }) => {
       ImageURL: "",
     });
   };
-  
+
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -138,26 +137,38 @@ export const ProductForm = ({ id }: { id?: number }) => {
         return;
       }
     }
-    try {
-      console.log("CONSOLE", productToSubmit);
-      if (id === undefined) {
-        await productService.CreateProduct(productToSubmit);
-      } else {
-        await productService.UpdateProduct(id, productToSubmit);
-      }
-      setTimeout(() => {
-        handleResetProduct();
-        showSuccess();
+    let response;
+    console.log("CONSOLE", productToSubmit);
+    if (id === undefined) {
+      response = await productService.CreateProduct(productToSubmit);
+      if (response.success) {
+        console.log("Producto creado", response.data);
         setTimeout(() => {
-          navigate("/products");
-        }, 400);
-      }, 700);
-      seterror(false);
-    } catch (error) {
+          handleResetProduct();
+          showSuccess();
+          setTimeout(() => {
+            navigate("/products");
+          }, 400);
+        }, 700);
+        seterror(false);
+        return;
+      }
       showError();
-      console.log("Error de la api al crear un producto", error);
-    } finally {
-      setloading(false);
+    } else {
+      response = await productService.UpdateProduct(id, productToSubmit);
+      if (response.success) {
+        console.log("Producto actualizado", response.data);
+        setTimeout(() => {
+          handleResetProduct();
+          showSuccess();
+          setTimeout(() => {
+            navigate("/products");
+          }, 400);
+        }, 700);
+        seterror(false);
+        return;
+      }
+      showError();
     }
   };
 
@@ -171,14 +182,15 @@ export const ProductForm = ({ id }: { id?: number }) => {
     console.log(response.error);
   };
 
-
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchProduct = async (id: number): Promise<void> => {
-    try {
-      const fetchedProduct: IProduct = await productService.GetProductById(id);
+    const response = await productService.GetProductById(id);
+    if (response.success && response.data) {
+      const fetchedProduct = response.data;
+      console.log("Product fetched", fetchedProduct);
       setproduct({
         CategoryID: fetchedProduct.CategoryID,
         Description: fetchedProduct.Description,
@@ -187,9 +199,9 @@ export const ProductForm = ({ id }: { id?: number }) => {
         Price: fetchedProduct.Price,
         UserID: Number(user?.ID) || 0,
       });
-    } catch (error) {
-      console.log("Error al obtener el producto para ser editado", error);
+      return;
     }
+    console.log("Error al obtener el producto en productDetailPage");
   };
   useEffect(() => {
     if (id) {
@@ -249,16 +261,13 @@ export const ProductForm = ({ id }: { id?: number }) => {
                 name="Price"
                 type="number"
                 inputProps={{ min: 0 }}
-                slotProps={{
-                  
-                }}
+                slotProps={{}}
                 value={product.Price}
                 onChange={handleInputChange}
               />
             </FormControl>
 
             <FormControl fullWidth>
-             
               <Select
                 id="CategoryID"
                 value={product.CategoryID || ""}
