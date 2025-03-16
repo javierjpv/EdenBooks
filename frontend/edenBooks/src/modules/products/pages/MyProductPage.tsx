@@ -10,41 +10,7 @@ export const MyProductPage = () => {
   const isMobileScreen = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <>
-      <Container sx={{ marginTop: 22 }}>
-        <h1>My ProductPage</h1>
-      {/* Muestra el botón de filtros solo en pantallas pequeñas */}
-      {!isMediumScreen && (
-        <Button
-          variant="contained"
-          color="info"
-          onClick={() => setOpenDrawer(true)}
-          sx={{ ml: 2 }}
-        >
-          Filtros
-        </Button>
-      )}
-
-      <Grid2 container spacing={2}>
-        {/* Muestra el filtro en un Drawer en móviles, pero como un Grid en pantallas medianas */}
-        {isMediumScreen ? (
-          <Grid2  size={{ md: 3 }}>
-            <ProductFilters setOpenDrawer={setOpenDrawer} />
-          </Grid2>
-        ) : (
-          <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
-            <ProductFilters  setOpenDrawer={setOpenDrawer} />
-          </Drawer>
-        )}
-
-        <Grid2  size={{ md: 9 }}>
-          <ProductList />
-        </Grid2>
-      </Grid2>
-      </Container>
-
-
-
-      <Container sx={{ marginTop: 4 }}>
+      <Container sx={{ marginTop:22 }}>
         <h1>My ProductPage</h1>
 
         {/* Botón para abrir los filtros solo en móviles */}
