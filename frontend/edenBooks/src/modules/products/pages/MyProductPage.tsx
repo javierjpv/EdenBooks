@@ -1,7 +1,8 @@
-import { Button, Container, Drawer, Grid2, useMediaQuery, useTheme } from "@mui/material";
+import { Button, Container, Drawer, Grid2, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ProductList } from "../components/ProductList";
 import { ProductFilters } from "../components/ProductFilters";
 import { useState } from "react";
+import { ProductSortOptions } from "../components/ProductSortOptions";
 
 export const MyProductPage = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -11,7 +12,7 @@ export const MyProductPage = () => {
   return (
     <>
       <Container sx={{ marginTop:22 }}>
-        <h1>My ProductPage</h1>
+        <Typography textAlign={"center"} variant="h4" >My ProductPage</Typography>
 
         {/* Botón para abrir los filtros solo en móviles */}
         {!isMediumScreen && (
@@ -49,6 +50,7 @@ export const MyProductPage = () => {
 
          
           <Grid2 size={{xs:12,md: 9 }}>
+          <ProductSortOptions />
             <ProductList />
           </Grid2>
         </Grid2>
