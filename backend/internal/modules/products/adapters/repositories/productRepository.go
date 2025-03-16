@@ -195,17 +195,9 @@ func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[st
 	var products []entities.Product
 	var favoriteProductIDs []uint
 
-	// Aplica los filtros, paginación, etc.
 	query := r.db.Model(&entities.Product{})
-	// for key, value := range filters {
-	// 	switch key {
-	// 	case "name":
-	// 		query = query.Where("name ILIKE ?", "%"+value+"%")
-	// 	case "description":
-	// 		query = query.Where("description ILIKE ?", "%"+value+"%")
-	// 		// Agrega más filtros según sea necesario
-	// 	}
-	// }
+
+	// Aplica los filtros, paginación, etc.
 	for key, value := range filters {
 		switch key {
 		case "name":
@@ -226,41 +218,46 @@ func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[st
 	}
 	// Aplicar ordenamiento si está presente
 	if sortBy, exists := filters["sort_by"]; exists {
-		order := filters["order"]
+		order := "asc"
+		if val, ok := filters["order"]; ok && (val == "asc" || val == "desc") {
+			order = val
+		}
 		query = query.Order(sortBy + " " + order)
 	}
-
 	// Paginación
 	if page, exists := filters["page"]; exists {
-		pageInt, err := strconv.Atoi(page)
-		if err == nil {
-			query = query.Offset((pageInt - 1) * 20) // Limitar a 20 productos por página
+		if pageInt, err := strconv.Atoi(page); err == nil && pageInt > 0 {
+			query = query.Offset((pageInt - 1) * 20).Limit(20)
+		} else {
+			query = query.Limit(20) // Valor por defecto
 		}
+	} else {
+		query = query.Limit(20) // Valor por defecto si no se envía "page"
 	}
 
 	// Obtener todos los productos
-	err := query.Find(&products).Error
-	if err != nil {
+	if err := query.Find(&products).Error; err != nil {
 		return nil, err
 	}
 
+	// Si no hay productos, devolver lista vacía sin consultar favoritos
+	if len(products) == 0 {
+		return []dto.ProductResponse{}, nil
+	}
 	// Obtener los productos favoritos del usuario (IDs)
-	err = r.db.Table("user_favourites").
+	if err := r.db.Table("user_favourites").
 		Where("user_id = ?", userID).
-		Pluck("product_id", &favoriteProductIDs).Error
-	if err != nil {
+		Pluck("product_id", &favoriteProductIDs).Error; err != nil {
 		return nil, err
 	}
 
 	// Crear un slice de ProductWithFavoriteStatus para devolver
-	var productsWithStatus []dto.ProductResponse
-	for _, product := range products {
-		// Verificar si el producto está en la lista de favoritos del usuario
-		isFavorite := contains(favoriteProductIDs, product.ID)
-		productsWithStatus = append(productsWithStatus, dto.ProductResponse{
+	productsWithStatus := make([]dto.ProductResponse, len(products))
+	for i, product := range products {
+		productsWithStatus[i] = dto.ProductResponse{
 			Product:    product,
-			IsFavorite: isFavorite,
-		})
+			IsFavorite: contains(favoriteProductIDs, product.ID),
+		}
 	}
 
 	return productsWithStatus, nil
