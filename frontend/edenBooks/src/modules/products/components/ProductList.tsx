@@ -3,13 +3,16 @@ import { IProduct } from "../interfaces/IProduct";
 import { ProductItem } from "./ProductItem";
 import { useEffect, useState } from "react";
 import { productService } from "../services/productService";
+import { useSearchParams } from "react-router";
 export const ProductList = () => {
   const [products, setproducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, seterror] = useState(false);
+  const [searchParams] = useSearchParams(); // Obtenemos los query params
+
   const fetchProducts = async () => {
     try {
-      const fetchedProducts = await productService.GetProducts();
+      const fetchedProducts = await productService.GetProducts(searchParams);
       seterror(false);
       setproducts(fetchedProducts);
     } catch (error) {
@@ -22,7 +25,7 @@ export const ProductList = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [searchParams]);
   return (
     <>
       <h1>ProductList</h1>

@@ -1,7 +1,7 @@
 import { IProduct } from "./IProduct"
 import { IProductRequest } from "./IProductResquest"
 export interface IProductService{
-        GetProducts():Promise<IProduct[]>
+        GetProducts(params?: URLSearchParams):Promise<IProduct[]>
         GetFavorites():Promise<IProduct[]>
         GetProductById(id: number):Promise<IProduct>
         CreateProduct(product: IProductRequest):Promise<void>

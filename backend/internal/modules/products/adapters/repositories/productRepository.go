@@ -195,16 +195,39 @@ func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[st
 	var products []entities.Product
 	var favoriteProductIDs []uint
 
-	// Aplica los filtros, paginación, etc. como lo hacías antes
+	// Aplica los filtros, paginación, etc.
 	query := r.db.Model(&entities.Product{})
+	// for key, value := range filters {
+	// 	switch key {
+	// 	case "name":
+	// 		query = query.Where("name ILIKE ?", "%"+value+"%")
+	// 	case "description":
+	// 		query = query.Where("description ILIKE ?", "%"+value+"%")
+	// 		// Agrega más filtros según sea necesario
+	// 	}
+	// }
 	for key, value := range filters {
 		switch key {
 		case "name":
 			query = query.Where("name ILIKE ?", "%"+value+"%")
 		case "description":
 			query = query.Where("description ILIKE ?", "%"+value+"%")
-			// Agrega más filtros según sea necesario
+		case "min_price":
+			query = query.Where("price >= ?", value)
+		case "max_price":
+			query = query.Where("price <= ?", value)
+		case "category_id":
+			query = query.Where("category_id = ?", value)
+		case "user_id":
+			query = query.Where("user_id = ?", value)
+		case "order_id":
+			query = query.Where("order_id = ?", value)
 		}
+	}
+	// Aplicar ordenamiento si está presente
+	if sortBy, exists := filters["sort_by"]; exists {
+		order := filters["order"]
+		query = query.Order(sortBy + " " + order)
 	}
 
 	// Paginación

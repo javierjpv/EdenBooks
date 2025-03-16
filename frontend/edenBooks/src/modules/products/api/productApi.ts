@@ -8,12 +8,10 @@ const BASE_URL = "http://localhost:6969/products";
 
 export const productApi: IProductApi = {
 
-  GetProducts: async (): Promise<IProductResponse[]> => {
-    const response = await axiosInstance.get<IProductResponse[]>(BASE_URL);
-    return response.data;
-  },
-  GetFavorites: async (): Promise<IProductResponse[]> => {
-    const response = await axiosInstance.get<IProductResponse[]>(`${BASE_URL}/favorites`);
+  GetProducts: async (params?: URLSearchParams): Promise<IProductResponse[]> => {
+    const response = await axiosInstance.get<IProductResponse[]>(BASE_URL,{
+      params: params ? Object.fromEntries(params) : {},
+    });
     return response.data;
   },
   GetProductById: async (id: number): Promise<IProductResponse> => {
@@ -28,6 +26,14 @@ export const productApi: IProductApi = {
   },
   DeleteProduct: async (id: number): Promise<void> => {
     await axios.delete(`${BASE_URL}/${id}`);
+  },
+
+
+
+
+  GetFavorites: async (): Promise<IProductResponse[]> => {
+    const response = await axiosInstance.get<IProductResponse[]>(`${BASE_URL}/favorites`);
+    return response.data;
   },
   AddToFavorite: async (id: number): Promise<void> => {
     await axiosInstance.post(`${BASE_URL}/${id}/favorite`);

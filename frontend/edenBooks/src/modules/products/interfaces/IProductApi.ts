@@ -2,7 +2,7 @@ import { IProductResponse } from "./IProductResponse";
 import { IProductRequest } from "./IProductResquest";
 
 export interface IProductApi {
-    GetProducts():Promise<IProductResponse[]>
+    GetProducts(params?: URLSearchParams):Promise<IProductResponse[]>
     GetFavorites():Promise<IProductResponse[]>
     GetProductById(id: number):Promise<IProductResponse>
     CreateProduct(product: IProductRequest):Promise<void>

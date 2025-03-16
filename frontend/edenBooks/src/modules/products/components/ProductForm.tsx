@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { categoryService } from "../../categories/services/categoryService";
 import { IProduct } from "../interfaces/IProduct";
 import { productService } from "../services/productService";
 import { ICategory } from "../../categories/interfaces/ICategory";
@@ -22,6 +21,7 @@ import { ArrowBackIosNew } from "@mui/icons-material";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
 import axios from "axios";
 import { IProductRequest } from "../interfaces/IProductResquest";
+import { CategoryService } from "../../categories/services/categoryService";
 
 const checkProduct = (product: IProductRequest): boolean => {
   if (
@@ -161,17 +161,16 @@ export const ProductForm = ({ id }: { id?: number }) => {
     }
   };
 
-  const fetchCategories = async (): Promise<void> => {
-    try {
-      const result: ICategory[] = await categoryService.GetCategories();
-      setcategories(result);
-    } catch (error) {
-      console.log(
-        "Error al obtener las categorias tanto para editar como crear un producto",
-        error
-      );
+  const fetchCategories = async () => {
+    const response = await CategoryService.GetCategories();
+    // setloadingCategories(false);
+    if (response.success && response.data) {
+      setcategories(response.data);
+      return;
     }
+    console.log(response.error);
   };
+
 
   useEffect(() => {
     fetchCategories();
