@@ -69,6 +69,3 @@ yarn dev
 
 Licencia
 Este proyecto está licenciado bajo la Licencia MIT.
-
-## Agradecimientos
-Un agradecimiento especial a la comunidad de código abierto.
