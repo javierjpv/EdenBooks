@@ -76,7 +76,7 @@ export const ProductList = () => {
         {!loading && !error
           ? products.map((product) => (
               <Grid2  key={product.ID} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                <ProductItem  product={product} />
+                <ProductItem fetchProducts={fetchProducts} product={product} />
               </Grid2>
             ))
           : ""}

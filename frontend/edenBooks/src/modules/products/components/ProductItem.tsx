@@ -17,8 +17,11 @@ import { productService } from "../services/productService";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuthStore } from "../../users/hooks/useAuthStore";
-
-export const ProductItem = ({ product }: { product: IProduct }) => {
+interface ProductItemProps{
+  product:IProduct
+  fetchProducts:()=>void
+}
+export const ProductItem = ({ product,fetchProducts }:ProductItemProps) => {
   const { user } = useAuthStore();
   const [loadingDelete, setloadingDelete] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState(product.isFavorite);
@@ -41,6 +44,7 @@ export const ProductItem = ({ product }: { product: IProduct }) => {
       setTimeout(() => {
         setloadingDelete(false);
       }, 700);
+      fetchProducts()
     } catch (error) {
       setloadingDelete(false);
       console.log("Error al eliminar un producto", error);
