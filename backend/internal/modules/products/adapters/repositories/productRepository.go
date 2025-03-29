@@ -190,7 +190,7 @@ func (r *ProductRepository) GetFilteredProducts(filters map[string]string) ([]en
 	return products, nil
 }
 
-// Función para obtener los productos y marcar si están en favoritos
+// Función para obtener los productos y marcar si están en favoritosGetProductsWithFavorites
 func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[string]string) ([]dto.ProductResponse, error) {
 	var products []entities.Product
 	var favoriteProductIDs []uint
@@ -210,6 +210,8 @@ func (r *ProductRepository) GetProductsWithFavorites(userID uint, filters map[st
 			query = query.Where("price <= ?", value)
 		case "category_id":
 			query = query.Where("category_id = ?", value)
+		case "exclude_user":
+			query = query.Where("user_id != ?", value)
 		case "user_id":
 			query = query.Where("user_id = ?", value)
 		case "order_id":

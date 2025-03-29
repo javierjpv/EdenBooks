@@ -51,6 +51,7 @@ export function Navbar() {
   let pages =
     user?.userState === "AUTHENTICATED"
       ? [
+          { name: "Libros", link: "/" },
           { name: "Mis libros", link: "/products" },
           { name: "Vender", link: "/products/new" },
           { name: "Notificaciones", link: "/notifications" },
@@ -70,7 +71,7 @@ export function Navbar() {
             variant="h6"
             noWrap
             component={Link}
-            to="/products"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -129,7 +130,7 @@ export function Navbar() {
             variant="h5"
             noWrap
             component={Link}
-            to="/products"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },

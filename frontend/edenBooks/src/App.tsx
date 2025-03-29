@@ -15,6 +15,7 @@ import { ChatPage } from "./modules/chats/pages/ChatPage";
 import { ChatDetail } from "./modules/chats/components/ChatDetail";
 import { FavoritesPage } from "./modules/products/pages/FavoritesPage";
 import { MyProfile } from "./modules/users/pages/MyProfile";
+import { ProductPage } from "./modules/products/pages/ProductPage";
 
 
 export const App = () => {
@@ -22,7 +23,7 @@ export const App = () => {
     <Routes>
       <Route path="/auth" element={<Auth />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<MyProductPage />} />
+        <Route path="/" element={<ProductPage />} />
         <Route path="/products" element={<MyProductPage />} />
         <Route path="/products/new" element={<NewProductPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
