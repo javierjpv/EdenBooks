@@ -21,3 +21,6 @@ vendor/
 .env
 .env.local
 .env.*.local
+
+#db
+cmd/test.db
