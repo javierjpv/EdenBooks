@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"strconv"
 
 	addresstDTO "github.com/javierjpv/edenBooks/internal/modules/addresses/application/dto"
+	addressUseCase "github.com/javierjpv/edenBooks/internal/modules/addresses/application/useCases"
 	orderDTO "github.com/javierjpv/edenBooks/internal/modules/orders/application/dto"
 	orderUsecase "github.com/javierjpv/edenBooks/internal/modules/orders/application/useCases"
 	productDTO "github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
@@ -36,25 +38,36 @@ type StripeHandler struct {
 	eventBusService    eventBusService.EventBus
 	orderUsecase       *orderUsecase.OrderUseCase
 	transactionUseCase *transactionUsecase.TransactionUseCase
+	addressUseCase     *addressUseCase.AddressUseCase
 }
 
-func NewStripeHandler(eventBusService eventBusService.EventBus, orderUsecase *orderUsecase.OrderUseCase, transactionUseCase *transactionUsecase.TransactionUseCase) *StripeHandler {
-	return &StripeHandler{eventBusService: eventBusService, orderUsecase: orderUsecase, transactionUseCase: transactionUseCase}
+func NewStripeHandler(eventBusService eventBusService.EventBus, orderUsecase *orderUsecase.OrderUseCase, transactionUseCase *transactionUsecase.TransactionUseCase, addressUseCase *addressUseCase.AddressUseCase) *StripeHandler {
+	return &StripeHandler{eventBusService: eventBusService, orderUsecase: orderUsecase, transactionUseCase: transactionUseCase, addressUseCase: addressUseCase}
 }
 
 func (h *StripeHandler) CreateCheckoutSession(c echo.Context) error {
+	body, _ := io.ReadAll(c.Request().Body)
+	log.Printf("Payload recibido en StripeHandler: %s", string(body))
+	c.Request().Body = io.NopCloser(bytes.NewReader(body)) // <- para que c.Bind funcione luego
+
 	var req CreateCheckoutSessionRequest
 	if err := c.Bind(&req); err != nil {
 		log.Println("Error al decodificar JSON:", err)
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
 	}
 
-	order := orderDTO.NewOrderRequest("pagado", req.UserID, uint(1), req.CarrierID, uint(1))
-	productIds := []uint{req.ProductID}
+	addressDto := addresstDTO.NewAddressRequest(
+		req.Shipping.City,
+		req.Shipping.Province,
+		req.Shipping.PostalCode,
+		req.Shipping.Country,
+		req.Shipping.Street,
+		req.Shipping.Number,
+	)
 
-	if err := h.orderUsecase.CheckOrder(*order, productIds); err != nil {
-		log.Println(err)
-		return c.JSON(http.StatusBadRequest, err.Error())
+	createdAddress, err := h.addressUseCase.CreateAddress(addressDto)
+	if err != nil {
+		log.Println("Error al crear la direccion:", err)
 	}
 
 	lineItem := &stripe.CheckoutSessionLineItemParams{
@@ -83,12 +96,27 @@ func (h *StripeHandler) CreateCheckoutSession(c echo.Context) error {
 		CancelURL:  stripe.String(req.CancelURL),
 	}
 	shippingJSON, _ := json.Marshal(req.Shipping)
+	// Usar el ID de la dirección recién creada
+	// order := orderDTO.NewOrderRequest("pendiente", uint(req.UserID), createdAddress.ID, uint(req.CarrierID),1)
+	order := orderDTO.OrderRequest{
+		State:     "pendiente",
+		UserID:    uint(req.UserID),
+		AddressID: uint(createdAddress.ID),
+		CarrierID: uint(req.CarrierID),
+	}
+	productIds := []uint{uint(req.ProductID)}
+
+	if err := h.orderUsecase.CheckOrder(order, productIds); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 	params.Params.Metadata = map[string]string{
 		"total":     fmt.Sprintf("%.2f", req.Product.Price),
 		"shipping":  string(shippingJSON), // Esto puede necesitar ser ajustado
 		"userID":    strconv.Itoa(int(req.UserID)),
 		"carrierID": strconv.Itoa(int(req.CarrierID)),
 		"productID": strconv.Itoa(int(req.ProductID)),
+		"addressID": strconv.Itoa(int(createdAddress.ID)),
 	}
 
 	session, err := session.New(params)
@@ -178,7 +206,6 @@ func (h *StripeHandler) HandleStripeWebhook(c echo.Context) error {
 		}
 		log.Printf("productID convertido: %d", productID)
 
-		// Convertir shipping de string a objeto JSON
 		var shipping addresstDTO.AddressRequest
 		if err := json.Unmarshal([]byte(session.Metadata["shipping"]), &shipping); err != nil {
 			log.Printf("❌ Error parseando shipping: %v", err)
@@ -189,6 +216,7 @@ func (h *StripeHandler) HandleStripeWebhook(c echo.Context) error {
 
 		//Publicar evento en el Bus
 		transaction := transactionDTO.NewTransactionRequest("tarjeta", float64(total))
+
 		createdTransaction, err := h.transactionUseCase.CreateTransaction(*transaction)
 		if err != nil {
 			return err

@@ -7,7 +7,7 @@ import (
 
 type OrderService interface {
 	CheckOrder(o dto.OrderRequest, productsIDs []uint) error
-
+	AddOrderIDToProducts(orderID uint, productsIDs []uint) error
 	CreateOrder(o dto.OrderRequest, productsIDs []uint) error
 
 	UpdateOrder(id uint, order dto.OrderRequest) error

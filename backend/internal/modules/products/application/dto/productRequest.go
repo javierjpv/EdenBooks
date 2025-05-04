@@ -8,4 +8,17 @@ type ProductRequest struct {
 	CategoryID uint   `json:"CategoryID"`
 	UserID     uint   `json:"UserID"`
 	ImageURL   string `json:"ImageURL"`
+	Sold       bool  `json:"Sold"`
+}
+
+func NewProductRequest(name, description string, price float64, categoryID, userID uint, imageURL string,sold bool,) ProductRequest {
+	return ProductRequest{
+		Name:        name,
+		Description: description,
+		Price:       price,
+		CategoryID:  categoryID,
+		UserID:      userID,
+		ImageURL:    imageURL,
+		Sold:sold,
+	}
 }

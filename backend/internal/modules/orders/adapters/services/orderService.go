@@ -5,14 +5,12 @@ import (
 	"log"
 
 	"github.com/javierjpv/edenBooks/internal/modules/addresses/application/dto"
-
-	// addressEntities "github.com/javierjpv/edenBooks/internal/modules/addresses/domain/entities"
-	// productDTO "github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
 	addressServices "github.com/javierjpv/edenBooks/internal/modules/addresses/domain/services"
 	carrierServices "github.com/javierjpv/edenBooks/internal/modules/carriers/domain/services"
 	orderDTO "github.com/javierjpv/edenBooks/internal/modules/orders/application/dto"
 	"github.com/javierjpv/edenBooks/internal/modules/orders/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/orders/domain/repositories"
+	productDTO "github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
 	productServices "github.com/javierjpv/edenBooks/internal/modules/products/domain/services"
 	userService "github.com/javierjpv/edenBooks/internal/modules/users/domain/services"
 	eventBusService "github.com/javierjpv/edenBooks/internal/shared/domain/services"
@@ -31,51 +29,62 @@ func NewOrderService(repo repositories.OrderRepository, productService productSe
 	return &OrderService{repo: repo, productService: productService, addressService: addressService, carrierService: carrierService, userService: userService, eventBusService: eventBusService}
 }
 
-// func(s * OrderService)AddOrderIDToProducts(orderID uint,productsIDs []uint)error{
-// 	for _, productID := range productsIDs {
-// 		product,err:=s.productService.GetProductByID(productID)
-// 		if err!=nil{
-// 			return fmt.Errorf("product does not exist")
-// 		}
-// 		if product.Sold {
-// 			return fmt.Errorf("product has already been sold")
-// 		}
-// 	}
-// 	for _, productsID := range productsIDs {
-// 		product,err:=s.productService.GetProductByID(productsID)
-// 		if err!=nil{
-// 			return fmt.Errorf("product does not exist")
-// 		}
-// 		product.OrderID=&orderID
-// 		product.Sold=true
-//         productDto:=productDTO.ProductDTO
-// 		if err:=s.productService.UpdateProduct(productsID);err!=nil{
-// 			return  fmt.Errorf("product orderID can not be updated")
-// 		}
-// 	}
-// 		// Publicar evento en el Bus
-// 		eventData := map[string]interface{}{
-// 			"content": fmt.Sprintf("Se ha creado un pedido con el id: %d",orderID),
-// 			"seen":false,
-// 			"userID":uint(1), //cambiar en el futuro para que sea dinamico
-// 		}
-// 		fmt.Println("📢 Publicando evento 'order.created' con datos:", eventData)
-// 		s.eventBusService.Publish("order.created", eventData)
+func (s *OrderService) AddOrderIDToProducts(orderID uint, productsIDs []uint) error {
+	order, err := s.repo.GetOrderByID(orderID)
+	if err != nil {
+		return fmt.Errorf("order does not exist")
+	}
 
-// 	return nil
-// }
+	for _, productID := range productsIDs {
+		product, err := s.productService.GetProductByID(productID)
+		if err != nil {
+			return fmt.Errorf("product does not exist")
+		}
+		if product.Sold {
+			return fmt.Errorf("product has already been sold")
+		}
+	}
+	for _, productsID := range productsIDs {
+		product, err := s.productService.GetProductByID(productsID)
+		if err != nil {
+			return fmt.Errorf("product does not exist")
+		}
+		product.OrderID = &orderID
+		product.Sold = true
+		fmt.Println("ProductRequest en AddOrderIDToProducts:", product)
+		productRequest := productDTO.NewProductRequest(product.Name, product.Description, product.Price, product.CategoryID, product.UserID, product.ImageURL, product.Sold)
+		if err := s.productService.UpdateProduct(product.ID, productRequest); err != nil {
+			return fmt.Errorf("product orderID can not be updated")
+		}
+	}
+
+	userId := order.UserID
+	// Publicar evento en el Bus
+	eventData := map[string]interface{}{
+		"content": fmt.Sprintf("Se ha creado un pedido con el id: %d", orderID),
+		"seen":    false,
+		"userID":  userId,
+	}
+	fmt.Println("📢 Publicando evento 'order.created' con datos:", eventData)
+	s.eventBusService.Publish("order.created", eventData)
+
+	return nil
+}
 
 func (s *OrderService) CheckOrder(o orderDTO.OrderRequest, productsIDs []uint) error {
 
 	if _, err := s.userService.GetUserByID(o.UserID); err != nil {
+		log.Printf("Error al verificar el usuario con ID: %d. Error: %v", o.UserID, err)
 		return err
 	}
 
 	if _, err := s.addressService.GetAddressByID(o.AddressID); err != nil {
+		log.Printf("Error al verificar la dirección con ID: %d. Error: %v", o.AddressID, err)
 		return err
 	}
 
 	if _, err := s.carrierService.GetCarrierByID(o.CarrierID); err != nil {
+		log.Printf("Error al verificar el transportista con ID: %d. Error: %v", o.CarrierID, err)
 		return err
 	}
 
@@ -83,6 +92,7 @@ func (s *OrderService) CheckOrder(o orderDTO.OrderRequest, productsIDs []uint) e
 	for _, productID := range productsIDs {
 		product, err := s.productService.GetProductByID(productID)
 		if err != nil {
+			log.Printf("Error al verificar el producto con ID: %d. Error: %v", productID, err)
 			return err
 		}
 		if product.Sold {
@@ -103,7 +113,7 @@ func (s *OrderService) CreateOrder(o orderDTO.OrderRequest, productsIDs []uint) 
 	if err != nil {
 		return err
 	}
-	if err := s.productService.AddOrderIDToProducts(orderID, productsIDs); err != nil {
+	if err := s.AddOrderIDToProducts(orderID, productsIDs); err != nil {
 		return err
 	}
 	return nil
@@ -162,7 +172,7 @@ func (s *OrderService) ListenPaymentCreated() {
 		)
 
 		// Crear dirección
-		createdAddress, err := s.addressService.CreateAddress(*addressDto)
+		createdAddress, err := s.addressService.CreateAddress(addressDto)
 		if err != nil {
 			fmt.Println("Error al crear la dirección:", err)
 			return

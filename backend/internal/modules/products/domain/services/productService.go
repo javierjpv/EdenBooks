@@ -8,7 +8,6 @@ import (
 type ProductService interface {
 	CreateProduct(dto.ProductRequest) error
 	UpdateProduct(id uint, product dto.ProductRequest) error
-	AddOrderIDToProducts(orderID uint, productsIDs []uint) error
 	DeleteProduct(id uint) error
 	GetProductByID(id uint) (*entities.Product, error)
 	GetProductByIDWithFavorite(id uint, userID uint) (*dto.ProductResponse, error)

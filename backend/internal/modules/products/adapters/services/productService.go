@@ -1,19 +1,16 @@
 package services
 
 import (
-	"fmt"
 
 	"github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
 	"github.com/javierjpv/edenBooks/internal/modules/products/domain/entities"
 	"github.com/javierjpv/edenBooks/internal/modules/products/domain/repositories"
 	eventBusService "github.com/javierjpv/edenBooks/internal/shared/domain/services"
-	// orderService "github.com/javierjpv/edenBooks/internal/modules/orders/domain/services"
 )
 
 type ProductService struct {
 	repo            repositories.ProductRepository
 	eventBusService eventBusService.EventBus
-	// orderService orderService.OrderService
 }
 
 func NewProductService(repo repositories.ProductRepository, eventBusService eventBusService.EventBus) *ProductService {
@@ -36,39 +33,8 @@ func (s *ProductService) UpdateProduct(id uint, p dto.ProductRequest) error {
 	product.CategoryID = p.CategoryID
 	product.UserID = p.UserID
 	product.ImageURL = p.ImageURL
+	product.Sold = p.Sold
 	return s.repo.UpdateProduct(product)
-}
-func (s *ProductService) AddOrderIDToProducts(orderID uint, productsIDs []uint) error {
-	for _, productID := range productsIDs {
-		product, err := s.repo.GetProductByID(productID)
-		if err != nil {
-			return fmt.Errorf("product does not exist")
-		}
-		if product.Sold {
-			return fmt.Errorf("product has already been sold")
-		}
-	}
-	for _, productsID := range productsIDs {
-		product, err := s.repo.GetProductByID(productsID)
-		if err != nil {
-			return fmt.Errorf("product does not exist")
-		}
-		product.OrderID = &orderID
-		product.Sold = true
-		if err := s.repo.UpdateProduct(product); err != nil {
-			return fmt.Errorf("product orderID can not be updated")
-		}
-	}
-	// Publicar evento en el Bus
-	eventData := map[string]interface{}{
-		"content": fmt.Sprintf("Se ha creado un pedido con el id: %d", orderID),
-		"seen":    false,
-		"userID":  uint(1), //cambiar en el futuro para que sea dinamico
-	}
-	fmt.Println("📢 Publicando evento 'order.created' con datos:", eventData)
-	s.eventBusService.Publish("order.created", eventData)
-
-	return nil
 }
 
 func (s *ProductService) DeleteProduct(id uint) error {

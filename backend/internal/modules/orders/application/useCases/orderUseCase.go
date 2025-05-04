@@ -24,7 +24,7 @@ func (u *OrderUseCase) CheckOrder(o dto.OrderRequest, productsIDs []uint) error 
 	if o.State == "" {
 		return ErrMissingFields
 	}
-	if o.AddressID == 0 || o.UserID == 0 || o.OrderID == 0 {
+	if o.AddressID == 0 || o.UserID == 0 {
 		return ErrInvalid
 	}
 	for _, productID := range productsIDs {
@@ -38,7 +38,7 @@ func (u *OrderUseCase) CreateOrder(o dto.OrderRequest, productsIDs []uint) error
 	if o.State == "" {
 		return ErrMissingFields
 	}
-	if o.AddressID == 0 || o.UserID == 0 || o.OrderID == 0 || o.TransactionID == 0 {
+	if o.AddressID == 0 || o.UserID == 0 || o.TransactionID == 0 {
 		return ErrInvalid
 	}
 	for _, productID := range productsIDs {
@@ -53,7 +53,7 @@ func (u *OrderUseCase) UpdateOrder(id uint, o dto.OrderRequest) error {
 	if o.State == "" {
 		return ErrMissingFields
 	}
-	if o.AddressID == 0 || o.UserID == 0 || id == 0 || o.OrderID == 0 || o.TransactionID == 0 {
+	if o.AddressID == 0 || o.UserID == 0 || id == 0 || o.TransactionID == 0 {
 		return ErrInvalid
 	}
 	return u.service.UpdateOrder(id, o)
@@ -74,7 +74,7 @@ func (u *OrderUseCase) GetOrderByID(id uint) (*dto.OrderResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	orderResponse := dto.NewOrderResponse(order.ID,order.CreatedAt,order.UpdatedAt,order.State,order.UserID,order.AddressID,order.CarrierID,order.TransactionID)
+	orderResponse := dto.NewOrderResponse(order.ID, order.CreatedAt, order.UpdatedAt, order.State, order.UserID, order.AddressID, order.CarrierID, order.TransactionID)
 	return orderResponse, nil
 }
 func (u *OrderUseCase) GetFilteredOrders(filters map[string]string) ([]dto.OrderResponse, error) {
@@ -101,12 +101,12 @@ func (u *OrderUseCase) GetFilteredOrders(filters map[string]string) ([]dto.Order
 
 	// Convertir cada Order a OrderResponse
 	var orderResponses []dto.OrderResponse
-	for _, order := range *orders { 
-    orderResponses = append(orderResponses, *dto.NewOrderResponse(
-        order.ID, order.CreatedAt, order.UpdatedAt, order.State,
-        order.UserID, order.AddressID, order.CarrierID, order.TransactionID,
-    ))
-}
+	for _, order := range *orders {
+		orderResponses = append(orderResponses, *dto.NewOrderResponse(
+			order.ID, order.CreatedAt, order.UpdatedAt, order.State,
+			order.UserID, order.AddressID, order.CarrierID, order.TransactionID,
+		))
+	}
 
 	return orderResponses, nil
 }

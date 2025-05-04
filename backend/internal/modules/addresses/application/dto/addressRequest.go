@@ -9,6 +9,6 @@ type AddressRequest struct {
 	Number     int    `json:"number"`
 }
 
-func NewAddressRequest(city string, province string, postalCode string, country string, street string, number int) *AddressRequest {
-	return &AddressRequest{City: city, Province: province, PostalCode: postalCode, Country: country, Street: street, Number: number}
+func NewAddressRequest(city string, province string, postalCode string, country string, street string, number int) AddressRequest {
+	return AddressRequest{City: city, Province: province, PostalCode: postalCode, Country: country, Street: street, Number: number}
 }

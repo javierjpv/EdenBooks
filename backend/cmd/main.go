@@ -190,7 +190,7 @@ func main() {
 	transactionService:=transactionService.NewTransactionService(transactionRepository)
 	transactionUseCase:=transactionUseCase.NewTransactionUseCase(transactionService)
 	transactionHandler:=transactionHandler.NewTransactionHandler(*transactionUseCase)
-	stripeHandler:=stripeHandler.NewStripeHandler(eventBus,orderUseCase,transactionUseCase)
+	stripeHandler:=stripeHandler.NewStripeHandler(eventBus,orderUseCase,transactionUseCase,addressUseCase)
 
     //Evenbus
 
