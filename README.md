@@ -1,6 +1,6 @@
 # EdenBooks
 
-App where you can buy and sell second-hand books.
+Plataforma donde puedes comprar y vender libros de segunda mano.
 
 ## Overview
 
