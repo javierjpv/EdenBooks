@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	messageUsecase "github.com/javierjpv/edenBooks/internal/modules/messages/application/useCases"
+	messageUsecase "github.com/javierjpv/edenBooks/internal/modules/messages/application/usecases"
 	chatHandler "github.com/javierjpv/edenBooks/internal/modules/chats/adapters/handlers"
 )
 

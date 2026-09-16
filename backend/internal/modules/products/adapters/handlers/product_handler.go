@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/javierjpv/edenBooks/internal/modules/products/application/dto"
-	usecases "github.com/javierjpv/edenBooks/internal/modules/products/application/useCases"
+	usecases "github.com/javierjpv/edenBooks/internal/modules/products/application/usecases"
 	"github.com/javierjpv/edenBooks/internal/shared/auth"
 	"github.com/labstack/echo/v4"
 )

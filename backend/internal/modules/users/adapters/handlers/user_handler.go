@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/javierjpv/edenBooks/internal/modules/users/application/dto"
-	usecases "github.com/javierjpv/edenBooks/internal/modules/users/application/useCases"
+	usecases "github.com/javierjpv/edenBooks/internal/modules/users/application/usecases"
 	"github.com/labstack/echo/v4"
 )
 

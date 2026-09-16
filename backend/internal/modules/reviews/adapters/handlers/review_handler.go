@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/javierjpv/edenBooks/internal/modules/reviews/application/dto"
-	usecases "github.com/javierjpv/edenBooks/internal/modules/reviews/application/useCases"
+	usecases "github.com/javierjpv/edenBooks/internal/modules/reviews/application/usecases"
 	"github.com/labstack/echo/v4"
 )
 

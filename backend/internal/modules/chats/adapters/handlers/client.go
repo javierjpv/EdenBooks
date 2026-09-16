@@ -13,7 +13,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/websocket"
 	"github.com/javierjpv/edenBooks/internal/modules/messages/application/dto"
-	messageUsecase "github.com/javierjpv/edenBooks/internal/modules/messages/application/useCases"
+	messageUsecase "github.com/javierjpv/edenBooks/internal/modules/messages/application/usecases"
 )
 
 const (
