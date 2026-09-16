@@ -1,34 +1,38 @@
 package entities
 
 import (
+	"time"
+
 	messageEntities "github.com/javierjpv/edenBooks/internal/modules/messages/domain/entities"
 	notificationEntities "github.com/javierjpv/edenBooks/internal/modules/notifications/domain/entities"
 	orderEntities "github.com/javierjpv/edenBooks/internal/modules/orders/domain/entities"
 	reviewEntities "github.com/javierjpv/edenBooks/internal/modules/reviews/domain/entities"
-	"gorm.io/gorm"
 )
+
 // En arquitecturas modulares donde cada modulo se encarga de sus entidades lo mejor es no usar preloads
-//Puedes comentar los preloads que no uses sin problemas, los preload no se hacen efectivos al menos que tu lo indiques explicitamente
-type User struct{
-	gorm.Model
-	Name string  `gorm:"default:''"`
-	Email string `gorm:"not null"`
-	Password string `gorm:"not null"`
+// Puedes comentar los preloads que no uses sin problemas, los preload no se hacen efectivos al menos que tu lo indiques explicitamente
+type User struct {
+	ID        uint `gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Name      string `gorm:"default:''"`
+	Email     string `gorm:"not null"`
+	Password  string `gorm:"not null"`
 	// Role string //poner user por defecto
-	Tel string   `gorm:"default:''"`
+	Tel       string `gorm:"default:''"`
 	AddressID *uint  `gorm:"default:NULL"`
-	ImageURL string  `gorm:"default:''"`
+	ImageURL  string `gorm:"default:''"`
 	//En Gorm en las relaciones 1:N la clave foranea ira hacia la tabla N
 	//En estos casos donde habra un array al haber colocado ya la clave foranea donde corresponde Gorm podra relacionarlos y entonces cuando el usuario tenga por ejemplo orders
 	//relacionadas con un userId se podra acceder a este array mediante  Preload
 	//Los slices no hace falta ponerlos como nullables ya que por defecto son slices vacios ([])
 
 	// linea comentada debido a que no hare el preload al ser menos eficiente, los preloads se usan en casos excepcionales
-	// Products []productEntities.Product `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N 
-	Orders []orderEntities.Order   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N
-    Reviews []reviewEntities.Review `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N
-    Notifications []notificationEntities.Notification `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N
-	// Chats [] chatEntities.Chat       `gorm:"many2many:user_chats;"` // Relacion N:M   //Debes arreglarlo para que se pueda acceder desde los chat a los users 
+	// Products []productEntities.Product `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N
+	Orders        []orderEntities.Order               `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N
+	Reviews       []reviewEntities.Review             `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N
+	Notifications []notificationEntities.Notification `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // Relacion 1:N
+	// Chats [] chatEntities.Chat       `gorm:"many2many:user_chats;"` // Relacion N:M   //Debes arreglarlo para que se pueda acceder desde los chat a los users
 	//Actualmente solo los users pueden acceder a sus chats y no es bidireccional
 	//La tabla intermedia entre user y chat es creada  igulmente
 	// Relación 1:N (el usuario puede enviar muchos mensajes)
@@ -38,9 +42,7 @@ type User struct{
 
 }
 
-func NewUser(email string, password string)*User{
-    
-    return &User{Email: email,Password:password}
+func NewUser(email string, password string) *User {
+
+	return &User{Email: email, Password: password}
 }
-
-

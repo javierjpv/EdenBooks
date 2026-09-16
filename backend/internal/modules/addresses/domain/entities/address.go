@@ -1,13 +1,16 @@
 package entities
 
 import (
+	"time"
+
 	orderEntities "github.com/javierjpv/edenBooks/internal/modules/orders/domain/entities"
 	userEntities "github.com/javierjpv/edenBooks/internal/modules/users/domain/entities"
-	"gorm.io/gorm"
 )
 
 type Address struct {
-	gorm.Model
+		ID        uint `gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 	City       string
 	Province   string
 	PostalCode string

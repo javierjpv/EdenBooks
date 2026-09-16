@@ -1,17 +1,18 @@
 package entities
 
 import (
-	// reviewEntities "github.com/javierjpv/edenBooks/internal/modules/reviews/domain/entities"
+	"time"
 	userEntities "github.com/javierjpv/edenBooks/internal/modules/users/domain/entities"
-	"gorm.io/gorm"
 )
 
 type Product struct {
-	gorm.Model
+	ID          uint      `gorm:"primaryKey"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	Name          string  `gorm:"not null"`
 	Description   string  `gorm:"not null"`
 	Price         float64 `gorm:"not null"`
-	OrderID       *uint //relacion 1:N un pedido tiene muchos productos y un producto soloe esta en un pedido
+	OrderID       *uint //relacion 1:N un pedido tiene muchos productos y un producto solo esta en un pedido
 	//Order deberia ser opcional ya que al crear un producto no debe tener un order
 	CategoryID uint                    `gorm:"not null"` //Relacion 1:N una categoria tiene muchos productos y un producto tiene una categoria
 	UserID     uint                    `gorm:"not null"` //Relacion 1:N un produto tiene un usuario y un usuario tiene muchos productos

@@ -56,7 +56,7 @@ import (
 	orderRepository "github.com/javierjpv/edenBooks/internal/modules/orders/adapters/repositories"
 	orderRoute "github.com/javierjpv/edenBooks/internal/modules/orders/adapters/routes"
 	orderService "github.com/javierjpv/edenBooks/internal/modules/orders/adapters/services"
-	orderUseCase "github.com/javierjpv/edenBooks/internal/modules/orders/application/useCases"
+	orderUseCase "github.com/javierjpv/edenBooks/internal/modules/orders/application/usecases"
 
 	notificationHandler "github.com/javierjpv/edenBooks/internal/modules/notifications/adapters/handlers"
 	notificationRepository "github.com/javierjpv/edenBooks/internal/modules/notifications/adapters/repositories"
@@ -76,7 +76,7 @@ import (
 	transactionService "github.com/javierjpv/edenBooks/internal/modules/transactions/adapters/services"
 	transactionUseCase "github.com/javierjpv/edenBooks/internal/modules/transactions/application/useCases"
 
-	eventBusService "github.com/javierjpv/edenBooks/internal/shared/infrastructure/services"
+	eventBusService "github.com/javierjpv/edenBooks/internal/shared/adapters/services"
 
 	stripeHandler "github.com/javierjpv/edenBooks/internal/modules/stripe/adapters/handlers"
 	stripeRoute "github.com/javierjpv/edenBooks/internal/modules/stripe/adapters/routes"
